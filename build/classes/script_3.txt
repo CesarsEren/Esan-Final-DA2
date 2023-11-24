@@ -1,0 +1,66 @@
+ALTER TABLE [dbo].[Almacen]  WITH CHECK ADD  CONSTRAINT [fk_Almacen_idTienda] FOREIGN KEY([idTienda])
+REFERENCES [dbo].[Tienda] ([idTienda]) 
+ALTER TABLE [dbo].[Almacen] CHECK CONSTRAINT [fk_Almacen_idTienda] 
+ALTER TABLE [dbo].[CabCompra]  WITH CHECK ADD  CONSTRAINT [fk_CabCompra_idProveedor] FOREIGN KEY([idProveedor])
+REFERENCES [dbo].[Proveedor] ([idProveedor]) 
+ALTER TABLE [dbo].[CabCompra] CHECK CONSTRAINT [fk_CabCompra_idProveedor] 
+ALTER TABLE [dbo].[CabCompra]  WITH CHECK ADD  CONSTRAINT [fk_CabCompra_idTipComp] FOREIGN KEY([idTipComp])
+REFERENCES [dbo].[TipoComprobante] ([idTipComp]) 
+ALTER TABLE [dbo].[CabCompra] CHECK CONSTRAINT [fk_CabCompra_idTipComp] 
+ALTER TABLE [dbo].[CabCompra]  WITH CHECK ADD  CONSTRAINT [fk_CabCompra_idUsuario] FOREIGN KEY([idUsuarioReg])
+REFERENCES [dbo].[Usuario] ([idUsuario]) 
+ALTER TABLE [dbo].[CabCompra] CHECK CONSTRAINT [fk_CabCompra_idUsuario] 
+ALTER TABLE [dbo].[CabVenta]  WITH CHECK ADD  CONSTRAINT [fk_CabVenta_idCliente] FOREIGN KEY([idCliente])
+REFERENCES [dbo].[Cliente] ([idCliente]) 
+ALTER TABLE [dbo].[CabVenta] CHECK CONSTRAINT [fk_CabVenta_idCliente] 
+ALTER TABLE [dbo].[CabVenta]  WITH CHECK ADD  CONSTRAINT [fk_CabVenta_idTipComp] FOREIGN KEY([idTipComp])
+REFERENCES [dbo].[TipoComprobante] ([idTipComp]) 
+ALTER TABLE [dbo].[CabVenta] CHECK CONSTRAINT [fk_CabVenta_idTipComp] 
+ALTER TABLE [dbo].[CabVenta]  WITH CHECK ADD  CONSTRAINT [fk_CabVenta_idUsuario] FOREIGN KEY([idUsuarioReg])
+REFERENCES [dbo].[Usuario] ([idUsuario]) 
+ALTER TABLE [dbo].[CabVenta] CHECK CONSTRAINT [fk_CabVenta_idUsuario] 
+ALTER TABLE [dbo].[Cliente]  WITH CHECK ADD  CONSTRAINT [fk_Cliente_Ubigeo] FOREIGN KEY([idUbigeo])
+REFERENCES [dbo].[Ubigeo] ([idUbigeo]) 
+ALTER TABLE [dbo].[Cliente] CHECK CONSTRAINT [fk_Cliente_Ubigeo] 
+ALTER TABLE [dbo].[DetCompra]  WITH CHECK ADD  CONSTRAINT [fk_DetCompra_idCompra] FOREIGN KEY([idCompra])
+REFERENCES [dbo].[CabCompra] ([idCompra]) 
+ALTER TABLE [dbo].[DetCompra] CHECK CONSTRAINT [fk_DetCompra_idCompra] 
+ALTER TABLE [dbo].[DetCompra]  WITH CHECK ADD  CONSTRAINT [fk_DetCompra_idProducto] FOREIGN KEY([idProducto])
+REFERENCES [dbo].[Producto] ([idProducto]) 
+ALTER TABLE [dbo].[DetCompra] CHECK CONSTRAINT [fk_DetCompra_idProducto] 
+ALTER TABLE [dbo].[DetVenta]  WITH CHECK ADD  CONSTRAINT [fk_DetVenta_idProducto] FOREIGN KEY([idProducto])
+REFERENCES [dbo].[Producto] ([idProducto]) 
+ALTER TABLE [dbo].[DetVenta] CHECK CONSTRAINT [fk_DetVenta_idProducto] 
+ALTER TABLE [dbo].[DetVenta]  WITH CHECK ADD  CONSTRAINT [fk_DetVenta_idVenta] FOREIGN KEY([idVenta])
+REFERENCES [dbo].[CabVenta] ([idVenta]) 
+ALTER TABLE [dbo].[DetVenta] CHECK CONSTRAINT [fk_DetVenta_idVenta] 
+ALTER TABLE [dbo].[Inventario]  WITH CHECK ADD  CONSTRAINT [fk_Inventario_idAlmacen] FOREIGN KEY([idAlmacen])
+REFERENCES [dbo].[Almacen] ([idAlmacen]) 
+ALTER TABLE [dbo].[Inventario] CHECK CONSTRAINT [fk_Inventario_idAlmacen] 
+ALTER TABLE [dbo].[Inventario]  WITH CHECK ADD  CONSTRAINT [fk_Inventario_idProducto] FOREIGN KEY([idProducto])
+REFERENCES [dbo].[Producto] ([idProducto]) 
+ALTER TABLE [dbo].[Inventario] CHECK CONSTRAINT [fk_Inventario_idProducto] 
+ALTER TABLE [dbo].[NumComprob]  WITH CHECK ADD  CONSTRAINT [fk_NumComprob_idTienda] FOREIGN KEY([idTienda])
+REFERENCES [dbo].[Tienda] ([idTienda]) 
+ALTER TABLE [dbo].[NumComprob] CHECK CONSTRAINT [fk_NumComprob_idTienda] 
+ALTER TABLE [dbo].[NumComprob]  WITH CHECK ADD  CONSTRAINT [fk_NumComprob_idTipComp] FOREIGN KEY([idTipComp])
+REFERENCES [dbo].[TipoComprobante] ([idTipComp]) 
+ALTER TABLE [dbo].[NumComprob] CHECK CONSTRAINT [fk_NumComprob_idTipComp] 
+ALTER TABLE [dbo].[Producto]  WITH CHECK ADD  CONSTRAINT [fk_Producto_idCategoria] FOREIGN KEY([idCategoria])
+REFERENCES [dbo].[Categoria] ([idCategoria]) 
+ALTER TABLE [dbo].[Producto] CHECK CONSTRAINT [fk_Producto_idCategoria] 
+ALTER TABLE [dbo].[Proveedor]  WITH CHECK ADD  CONSTRAINT [fk_Proveedor_Ubigeo] FOREIGN KEY([idUbigeo])
+REFERENCES [dbo].[Ubigeo] ([idUbigeo]) 
+ALTER TABLE [dbo].[Proveedor] CHECK CONSTRAINT [fk_Proveedor_Ubigeo] 
+ALTER TABLE [dbo].[Puesto]  WITH CHECK ADD  CONSTRAINT [fk_Puesto_idArea] FOREIGN KEY([idArea])
+REFERENCES [dbo].[Area] ([idArea]) 
+ALTER TABLE [dbo].[Puesto] CHECK CONSTRAINT [fk_Puesto_idArea] 
+ALTER TABLE [dbo].[Trabajador]  WITH CHECK ADD  CONSTRAINT [fk_Trabajador_idPuesto] FOREIGN KEY([idPuesto])
+REFERENCES [dbo].[Puesto] ([idPuesto]) 
+ALTER TABLE [dbo].[Trabajador] CHECK CONSTRAINT [fk_Trabajador_idPuesto] 
+ALTER TABLE [dbo].[Usuario]  WITH CHECK ADD  CONSTRAINT [fk_Usuario_idRol] FOREIGN KEY([idRol])
+REFERENCES [dbo].[Rol] ([idRol]) 
+ALTER TABLE [dbo].[Usuario] CHECK CONSTRAINT [fk_Usuario_idRol] 
+ALTER TABLE [dbo].[Usuario]  WITH CHECK ADD  CONSTRAINT [fk_Usuario_idTrabajador] FOREIGN KEY([idTrabajador])
+REFERENCES [dbo].[Trabajador] ([idTrabajador]) 
+ALTER TABLE [dbo].[Usuario] CHECK CONSTRAINT [fk_Usuario_idTrabajador]

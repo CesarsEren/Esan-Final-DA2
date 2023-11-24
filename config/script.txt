@@ -1,0 +1,4 @@
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'EcoMarket')
+BEGIN
+    CREATE DATABASE [EcoMarket];
+END

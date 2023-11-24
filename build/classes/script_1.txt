@@ -1,0 +1,231 @@
+CREATE TABLE [dbo].[Almacen](
+	[idAlmacen] [int] NOT NULL  ,
+	[idTienda] [int] NULL,
+	[descr] [varchar](30) NULL,
+	[idEstado] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idAlmacen] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[Area](
+	[idArea] [int] NOT NULL,
+	[descr] [varchar](30) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idArea] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[CabCompra](
+	[idCompra] [int] NOT NULL,
+	[idProveedor] [int] NULL,
+	[idTipComp] [int] NULL,
+	[serie] [char](3) NULL,
+	[correlativo] [char](7) NULL,
+	[fecha] [datetime] NULL,
+	[impuesto] [decimal](18, 2) NULL,
+	[total] [decimal](18, 2) NULL,
+	[idUsuarioReg] [int] NULL,
+	[idUsuarioMod] [int] NULL,
+	[fechReg] [datetime] NULL,
+	[fechaMod] [datetime] NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idCompra] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[CabVenta](
+	[idVenta] [int] NOT NULL,
+	[idCliente] [int] NULL,
+	[idTipComp] [int] NULL,
+	[serie] [char](3) NULL,
+	[correlativo] [char](7) NULL,
+	[fecha] [datetime] NULL,
+	[impuesto] [decimal](18, 2) NULL,
+	[total] [decimal](18, 2) NULL,
+	[idUsuarioReg] [int] NULL,
+	[idUsuarioMod] [int] NULL,
+	[fechReg] [datetime] NULL,
+	[fechaMod] [datetime] NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idVenta] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+CREATE TABLE [dbo].[Categoria](
+	[idCategoria] [int] NOT NULL,
+	[descr] [varchar](30) NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idCategoria] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Cliente](
+	[idCliente] [int] NOT NULL,
+	[nif] [varchar](15) NULL,
+	[nombre] [varchar](30) NULL,
+	[idUbigeo] [char](6) NULL,
+	[direccion] [varchar](60) NULL,
+	[celular] [varchar](15) NULL,
+	[telefono] [varchar](15) NULL,
+	[correo] [varchar](30) NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idCliente] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[DetCompra](
+	[idCompra] [int] NULL,
+	[idDetCompra] [int] NULL,
+	[idProducto] [int] NULL,
+	[cantidad] [decimal](18, 2) NULL,
+	[importe] [decimal](18, 2) NULL,
+	[descuento] [decimal](18, 2) NULL
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[DetVenta](
+	[idVenta] [int] NULL,
+	[idDetVenta] [int] NULL,
+	[idProducto] [int] NULL,
+	[cantidad] [decimal](18, 2) NULL,
+	[importe] [decimal](18, 2) NULL,
+	[descuento] [decimal](18, 2) NULL
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Inventario](
+	[idAlmacen] [int] NULL,
+	[idProducto] [int] NULL,
+	[stockProd] [decimal](18, 2) NULL
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[NumComprob](
+	[idTienda] [int] NULL,
+	[idTipComp] [int] NULL,
+	[serie] [int] NULL,
+	[numero] [int] NULL
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Producto](
+	[idProducto] [int] NOT NULL,
+	[descr] [varchar](30) NULL,
+	[idCategoria] [int] NULL,
+	[precVta] [decimal](18, 2) NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idProducto] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Proveedor](
+	[idProveedor] [int] NOT NULL,
+	[nif] [varchar](15) NULL,
+	[nombre] [varchar](60) NULL,
+	[idUbigeo] [char](6) NULL,
+	[direccion] [varchar](60) NULL,
+	[celular] [varchar](15) NULL,
+	[telefono] [varchar](15) NULL,
+	[correo] [varchar](30) NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idProveedor] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Puesto](
+	[idPuesto] [int] NOT NULL,
+	[Puesto] [varchar](30) NULL,
+	[sueldo] [decimal](18, 2) NULL,
+	[idArea] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idPuesto] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Rol](
+	[idRol] [int] NOT NULL,
+	[rol] [varchar](30) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idRol] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Tienda](
+	[idTienda] [int] NOT NULL,
+	[Tienda] [varchar](30) NULL,
+	[idUbigeo] [char](6) NULL,
+	[descr] [char](50) NULL,
+	[idEstado] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idTienda] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[TipoComprobante](
+	[idTipComp] [int] NOT NULL,
+	[descr] [varchar](30) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idTipComp] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Trabajador](
+	[idTrabajador] [int] NOT NULL,
+	[idPuesto] [int] NULL,
+	[docIdent] [varchar](15) NULL,
+	[nombre] [varchar](30) NULL,
+	[apePat] [varchar](30) NULL,
+	[apeMat] [varchar](30) NULL,
+	[ubigeo] [char](6) NULL,
+	[direccion] [varchar](60) NULL,
+	[genero] [int] NULL,
+	[fecha_nacimiento] [date] NULL,
+	[celular] [varchar](15) NULL,
+	[telefono] [varchar](15) NULL,
+	[correo] [varchar](30) NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idTrabajador] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Ubigeo](
+	[idUbigeo] [char](6) NOT NULL,
+	[dept] [varchar](50) NULL,
+	[prov] [varchar](50) NULL,
+	[dist] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idUbigeo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+ 
+CREATE TABLE [dbo].[Usuario](
+	[idUsuario] [int] NOT NULL,
+	[usuario] [varchar](15) NULL,
+	[contrasenia] [varchar](8) NULL,
+	[idTrabajador] [int] NULL,
+	[idTienda] [int] NULL,
+	[idRol] [int] NULL,
+	[estado] [smallint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[idUsuario] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] 
