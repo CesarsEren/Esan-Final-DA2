@@ -4,6 +4,10 @@
  */
 package UI;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.JFrame;
+
 /**
  *
  * @author xhesm
@@ -15,6 +19,14 @@ public class FrmLogin extends javax.swing.JFrame {
      */
     public FrmLogin() {
         initComponents();
+        centerFrameOnScreen(this);
+    }
+
+    private static void centerFrameOnScreen(JFrame frame) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int centerX = (int) (screenSize.getWidth() - frame.getWidth()) / 2;
+        int centerY = (int) (screenSize.getHeight() - frame.getHeight()) / 2;
+        frame.setLocation(centerX, centerY);
     }
 
     /**
@@ -122,8 +134,8 @@ public class FrmLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         this.dispose();
-         new FrmPrincipal().setVisible(true);
-        
+        new FrmPrincipal().setVisible(true);
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
 

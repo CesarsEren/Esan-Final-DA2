@@ -5,6 +5,9 @@
 package UI;
 
 import UI.internal.InFrmTrabajador;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.JFrame;
 
 /**
  *
@@ -17,9 +20,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
      */
     public FrmPrincipal() {
         initComponents();
-        
-        
-        
+        centerFrameOnScreen(this);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
+    
+    private static void centerFrameOnScreen(JFrame frame) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int centerX = (int) (screenSize.getWidth() - frame.getWidth()) / 2;
+        int centerY = (int) (screenSize.getHeight() - frame.getHeight()) / 2;
+        frame.setLocation(centerX, centerY);
     }
 
     /**
@@ -68,6 +77,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Microsoft SQL Server.png"))); // NOI18N
         jLabel2.setText("localhost:1433");
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
 
         jLabel3.setText("Administrador / Usuario");
 
@@ -186,6 +200,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         frmTrabajador.setVisible(true);
         frmTrabajador.setLocation(200, 100);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        // TODO add your handling code here:
+        new FrmConfig().setVisible(true);
+    }//GEN-LAST:event_jLabel2MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

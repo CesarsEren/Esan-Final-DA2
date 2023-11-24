@@ -4,22 +4,22 @@
  */
 package proyectofinal;
 
+import DAO.Conexion;
+import UI.FrmConfig;
 import UI.FrmLogin;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author xhesm
  */
 public class ProyectoFinal {
-
-    public static void main22(String[] args) {
-        String x = "concat(p.idPuesto,'|',Puesto) as Puesto ";
-
-        int w = -1;
-        for (String y : x.split("as")) {
-            System.out.println((++w) + "" + y);
-        }
-    }
 
     /**
      * @param args the command line arguments
@@ -52,7 +52,36 @@ public class ProyectoFinal {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmLogin().setVisible(true);
+
+                Properties properties = new Properties();
+                String filePath = "config/app.properties";
+
+                try ( FileInputStream fileInput = new FileInputStream(filePath)) {
+                    // Cargar el archivo de propiedades
+                    properties.load(fileInput);
+                } catch (IOException e) {
+                    //  JOptionPane.showConfirmDialog(null, "Falta configurar la base de datos");
+                    e.printStackTrace();
+                    new FrmConfig().setVisible(true);
+                }
+
+                Conexion.url = properties.getProperty("database.url");
+                Conexion.user = properties.getProperty("database.username");
+                Conexion.driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+                Conexion.password = properties.getProperty("database.password");
+                if (Conexion.url == null || Conexion.user == null || Conexion.password == null || Conexion.url.isEmpty() || Conexion.user.isEmpty() || Conexion.password.isEmpty()) {
+                    new FrmConfig().setVisible(true);
+                } else {
+                    Conexion dbCo = new Conexion();
+                    try {
+                        dbCo.TestearConexion();
+                        new FrmLogin().setVisible(true);
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        new FrmConfig().setVisible(true);
+                        Logger.getLogger(ProyectoFinal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
             }
         });
     }

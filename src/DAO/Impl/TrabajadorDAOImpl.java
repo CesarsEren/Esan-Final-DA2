@@ -16,21 +16,14 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author xhesm
  */
-public class TrabajadorDAOImpl implements TrabajadorDAO {
-
-    String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=EcoMarket";
-    String dbDriver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    Conexion dbCon;
-    String user = "sa";
-    String password = "123456789";
+public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
     public TrabajadorDAOImpl() {
-        dbCon = new Conexion(dbDriver, dbURL, user, password);
     }
 
     @Override
     public DefaultTableModel llenartabla() {
-        Object[][] select = dbCon.select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,CAST(p.idPuesto AS VARCHAR(10))+'|'+Puesto as Puesto ,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
+        Object[][] select = select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,CAST(p.idPuesto AS VARCHAR(10))+'|'+Puesto as Puesto ,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setDataVector(select, new Object[]{"idTrabajador", "Puesto", "Nro Documento", "Nombre", "Apellido Paterno", "Apellido Materno", "Ubigeo", "Direccion", "Genero", "Fecha Nacimiento", "Celular", "Telefono", "Correo", "Estado"});
 
@@ -39,17 +32,17 @@ public class TrabajadorDAOImpl implements TrabajadorDAO {
 
     @Override
     public DefaultComboBoxModel llenarcombo() {
-        return dbCon.llenarcombo("Puesto", "idPuesto,Puesto", null);
+        return llenarcombo("Puesto", "idPuesto,Puesto", null);
     }
 
     @Override
     public Object[][] select() {
-        return dbCon.select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,p.idPuesto as idPuesto,Puesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
+        return select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,p.idPuesto as idPuesto,Puesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
     }
 
     @Override
     public DefaultTableModel buscarEnTabla(String colm, String data) {
-        Object[][] select = dbCon.select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,Puesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", colm + " like '%" + data + "%'");
+        Object[][] select = select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,Puesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", colm + " like '%" + data + "%'");
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setDataVector(select, new Object[]{"idTrabajador", "Puesto", "Nro Documento", "Nombre", "Apellido Paterno", "Apellido Materno", "Ubigeo", "Direccion", "Genero", "Fecha Nacimiento", "Celular", "Telefono", "Correo", "Estado"});
 
@@ -62,7 +55,7 @@ public class TrabajadorDAOImpl implements TrabajadorDAO {
         StringJoiner registros = new StringJoiner(",");
 
         if (t.getIdTrabajador() == 0) {
-            Object[][] objs = dbCon.select("Trabajador", "max(idTrabajador) as idTrabajador", null);
+            Object[][] objs = select("Trabajador", "max(idTrabajador) as idTrabajador", null);
             int lastID = Integer.parseInt(objs[0][0] + "");
             registros.add((++lastID) + "");
         }
@@ -81,15 +74,14 @@ public class TrabajadorDAOImpl implements TrabajadorDAO {
                 .add(comillas(t.getCorreo()))
                 .add(t.getEstado() + "");
 
-
         if (t.getIdTrabajador() == 0) {
-                    String campos = "idTrabajador,idPuesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion,genero,fecha_nacimiento,celular,telefono,correo,estado";
+            String campos = "idTrabajador,idPuesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion,genero,fecha_nacimiento,celular,telefono,correo,estado";
 
-            return dbCon.insert("Trabajador", campos, registros.toString());
+            return insert("Trabajador", campos, registros.toString());
         } else {
-                    String campos = "idPuesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion,genero,fecha_nacimiento,celular,telefono,correo,estado";
+            String campos = "idPuesto,docIdent,nombre,apePat,apeMat,ubigeo,direccion,genero,fecha_nacimiento,celular,telefono,correo,estado";
 
-            return dbCon.actualizar("Trabajador", campos, registros.toString(), "idTrabajador=" + t.getIdTrabajador());
+            return actualizar("Trabajador", campos, registros.toString(), "idTrabajador=" + t.getIdTrabajador());
         }
 
     }

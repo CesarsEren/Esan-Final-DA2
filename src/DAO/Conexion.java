@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
@@ -22,14 +24,30 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Conexion {
 
-    private Connection nn;
-    private static String user;
-    private static String password;
-    private static String driver;
-    private static String url;
+    private static Connection dbCon;
+    public static String user;
+    public static String password;
+    public static String driver;
+    public static String url;
 
     public Conexion() {
 
+    }
+
+    public boolean TestearConexion() throws ClassNotFoundException, SQLException {
+        Class.forName(Conexion.driver);
+        /*manejar persistencias y archivos XML*/
+        dbCon = DriverManager.getConnection(Conexion.url, Conexion.user, Conexion.password);
+        //dbCon.createStatement(); 
+        if (dbCon != null) {
+            System.out.println("Conexión exitosa");
+            // Puedes cerrar la conexión aquí si es necesario
+            dbCon.close();
+            return true;
+        } else {
+            System.out.println("No se pudo establecer la conexión");
+            return false;
+        }
     }
 
     /**
@@ -46,28 +64,29 @@ public class Conexion {
      * @param password contraseña para ingresar a la database
      */
     public Conexion(String driver, String url, String user, String password) {
-        this.driver = driver;
-        this.url = url;
-        this.user = user;
-        this.password = password;
+        Conexion.driver = driver;
+        Conexion.url = url;
+        Conexion.user = user;
+        Conexion.password = password;
         try {
-            Class.forName(this.driver);
+            Class.forName(Conexion.driver);
 
             /*manejar persistencias y archivos XML*/
-            nn = DriverManager.getConnection(this.url, this.user, this.password);
-            nn.createStatement();
+            dbCon = DriverManager.getConnection(Conexion.url, Conexion.user, Conexion.password);
+            dbCon.createStatement();
+            System.out.println("Conexión exitosa");
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("Error al conectar" + e);
         }
     }
 
     public Conexion(String driver, String url) {
-        this.driver = driver;
-        this.url = url;
+        Conexion.driver = driver;
+        Conexion.url = url;
         try {
-            Class.forName(this.driver);
-            nn = DriverManager.getConnection(this.url);
-            nn.createStatement();
+            Class.forName(Conexion.driver);
+            dbCon = DriverManager.getConnection(Conexion.url);
+            dbCon.createStatement();
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("error al conectar" + e);
         }
@@ -77,7 +96,12 @@ public class Conexion {
      * @return devuelve la conexion a la base de datos
      */
     public Connection conectardb() {
-        return nn;
+        try {
+            return dbCon = DriverManager.getConnection(Conexion.url, Conexion.user, Conexion.password);
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     /**
@@ -300,7 +324,7 @@ public class Conexion {
      * usar el nombre de el Jtable.setmodel(Select_enTables(xx,xx,xx))
      */
     public DefaultTableModel llenartabla(String tabla, String campos, String where) {
-        Object[][] ob = this.select(tabla, campos, where);
+        Object[][] ob = select(tabla, campos, where);
         Object[] col = campos.split(",");
         DefaultTableModel modelo = new DefaultTableModel(ob, col);
         return modelo;
@@ -317,7 +341,7 @@ public class Conexion {
      * con un .setmodel();
      */
     public DefaultComboBoxModel llenarcombo(String tabla, String campos, String where) {
-        Object[][] ob = this.select(tabla, campos, where);
+        Object[][] ob = select(tabla, campos, where);
 
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
         for (int i = 0; i < ob.length; i++) {
@@ -337,7 +361,7 @@ public class Conexion {
      * .setmodel(xxxx);
      */
     public DefaultListModel llenarlista(String tabla, String campos, String where) {
-        Object[][] ob = this.select(tabla, campos, where);
+        Object[][] ob = select(tabla, campos, where);
         DefaultListModel lis = new DefaultListModel();
         for (int i = 0; i < ob.length; i++) {
             lis.add(i, ob[i][0]);
@@ -357,7 +381,7 @@ public class Conexion {
         ResultSet Rs = null;
         try {
             System.out.println("" + SQL);
-            Statement Cmd = this.nn.createStatement();
+            Statement Cmd = Conexion.dbCon.createStatement();
             Rs = Cmd.executeQuery(SQL);
             System.out.println("" + Rs.toString());
         } catch (SQLException ex) {
@@ -375,7 +399,7 @@ public class Conexion {
     public int Ejecutar_transaccion(String SQL) {
         int r = 0;
         try {
-            Statement Cmd = this.nn.createStatement();
+            Statement Cmd = Conexion.dbCon.createStatement();
             r = Cmd.executeUpdate(SQL);
             System.out.print(r);
         } catch (Exception ex) {
@@ -386,7 +410,7 @@ public class Conexion {
 
     public void desconectar() {
         try {
-            nn.close();
+            dbCon.close();
         } catch (SQLException ex) {
             System.out.println(ex);
         }
