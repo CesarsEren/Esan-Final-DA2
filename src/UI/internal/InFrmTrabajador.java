@@ -224,12 +224,12 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
                             .addComponent(jLabel4)
                             .addComponent(txtnombre, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
-                        .addGap(0, 333, Short.MAX_VALUE))))
+                        .addGap(0, 342, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(66, Short.MAX_VALUE)
+                .addContainerGap(9, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel9))
@@ -344,7 +344,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(cboBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -483,7 +483,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
                 defaultTableModel = trabajadorDAO.buscarEnTabla("nombre", txtBuscador.getText());
                 break;
             case "APELLIDO PATERNO":
-                trabajadorDAO.buscarEnTabla("apePat", txtBuscador.getText());
+                defaultTableModel = trabajadorDAO.buscarEnTabla("apePat", txtBuscador.getText());
                 break;
             case "APELLIDO MATERNO":
                 defaultTableModel = trabajadorDAO.buscarEnTabla("apeMat", txtBuscador.getText());
