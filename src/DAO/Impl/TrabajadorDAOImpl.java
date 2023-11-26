@@ -87,7 +87,7 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
     }
 
     public String comillas(String str) {
-        return "'" + str + "'";
+        return "'" + str + "'";     
     }
 
 }
