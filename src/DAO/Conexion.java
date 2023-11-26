@@ -144,7 +144,6 @@ public class Conexion {
     public Object[][] select(String tabla, String campos, String where) {
         int registros = numeroRegistro("SELECT count(*) as total FROM " + tabla, where);
         String colname[] = campos.split(",");
-
         for (String w1 : colname) {
             System.out.println("colnames " + w1);
 

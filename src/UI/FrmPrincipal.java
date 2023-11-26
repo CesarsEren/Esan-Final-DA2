@@ -4,6 +4,7 @@
  */
 package UI;
 
+import UI.internal.InFrmTienda;
 import UI.internal.InFrmTrabajador;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -23,7 +24,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         centerFrameOnScreen(this);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
-    
+
     private static void centerFrameOnScreen(JFrame frame) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int centerX = (int) (screenSize.getWidth() - frame.getWidth()) / 2;
@@ -55,6 +56,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem12 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
@@ -149,6 +151,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jMenuItem6.setText("Usuario");
         jMenu2.add(jMenuItem6);
 
+        jMenuItem12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Small Business.png"))); // NOI18N
+        jMenuItem12.setText("Tienda");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem12);
+
         jMenuBar1.add(jMenu2);
 
         jMenu1.setText("Reportes");
@@ -206,6 +217,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
         new FrmConfig().setVisible(true);
     }//GEN-LAST:event_jLabel2MouseClicked
 
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        // TODO add your handling code here: 
+        InFrmTienda frmTienda = new InFrmTienda();
+        desktop.add(frmTienda);
+        frmTienda.setVisible(true);
+        frmTienda.setLocation(200, 100);
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
@@ -218,6 +237,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
