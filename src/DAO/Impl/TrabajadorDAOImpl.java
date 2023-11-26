@@ -23,7 +23,11 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
     @Override
     public DefaultTableModel llenartabla() {
-        Object[][] select = select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,CAST(p.idPuesto AS VARCHAR(10))+'|'+Puesto as Puesto ,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
+       /*  Object[][] select2 = select("Area","idArea,descr",null);
+        DefaultTableModel defaultTableModel = new DefaultTableModel(); 
+        defaultTableModel.setDataVector(select2, new Object[]{"ID","DESCRIPCIÓN"});*/
+        
+       Object[][] select = select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,CAST(p.idPuesto AS VARCHAR(10))+'|'+Puesto as Puesto ,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setDataVector(select, new Object[]{"idTrabajador", "Puesto", "Nro Documento", "Nombre", "Apellido Paterno", "Apellido Materno", "Ubigeo", "Direccion", "Genero", "Fecha Nacimiento", "Celular", "Telefono", "Correo", "Estado"});
 
@@ -48,7 +52,7 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
         return dtm;
     }
-
+ 
     @Override
     public boolean save(Trabajador t) {
 
