@@ -9,11 +9,11 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-public class FrmProveedor extends javax.swing.JFrame {
+public class InFrmProveedor extends javax.swing.JInternalFrame {
     ProveedorDAO provDao;
     DefaultTableModel dtm;
     int idProveedor;
-    public FrmProveedor() {
+    public InFrmProveedor() {
         provDao = new ProveedorDAO();
         initComponents();
         dtm = (DefaultTableModel)this.TBLproveedores.getModel();
@@ -133,7 +133,7 @@ public class FrmProveedor extends javax.swing.JFrame {
         TXTcorreo = new javax.swing.JTextField();
         BtnUbigeo = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         TBLproveedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -544,20 +544,21 @@ public class FrmProveedor extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InFrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InFrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InFrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InFrmProveedor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmProveedor().setVisible(true);
+                new InFrmProveedor().setVisible(true);
             }
         });
     }

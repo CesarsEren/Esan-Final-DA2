@@ -4,6 +4,7 @@
  */
 package UI;
 
+import UI.internal.InFrmProveedor;
 import UI.internal.InFrmTrabajador;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -14,7 +15,6 @@ import javax.swing.JFrame;
  * @author xhesm
  */
 public class FrmPrincipal extends javax.swing.JFrame {
-
     /**
      * Creates new form FrmPrincipal
      */
@@ -122,6 +122,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Escrow Process.png"))); // NOI18N
         jMenuItem1.setText("Proveedor");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem1);
 
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/User Male_1.png"))); // NOI18N
@@ -205,6 +210,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         new FrmConfig().setVisible(true);
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        InFrmProveedor frmMProv = new InFrmProveedor();
+        desktop.add(frmMProv);
+        frmMProv.setVisible(true);
+        frmMProv.setLocation(200,100);
+        
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
