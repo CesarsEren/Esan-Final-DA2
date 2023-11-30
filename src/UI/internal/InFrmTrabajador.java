@@ -313,7 +313,6 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         jtblTrabajador.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jtblTrabajador.setGridColor(new java.awt.Color(102, 204, 0));
         jtblTrabajador.setRowHeight(15);
-        jtblTrabajador.setRowMargin(1);
         jtblTrabajador.setSelectionBackground(new java.awt.Color(102, 204, 0));
         jtblTrabajador.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jtblTrabajador.addMouseListener(new java.awt.event.MouseAdapter() {

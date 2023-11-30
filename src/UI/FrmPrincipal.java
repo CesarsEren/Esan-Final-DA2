@@ -4,6 +4,7 @@
  */
 package UI;
 
+import UI.internal.InFrmCompra;
 import UI.internal.InFrmProveedor;
 import UI.internal.InFrmTrabajador;
 import java.awt.Dimension;
@@ -110,6 +111,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Return Purchase.png"))); // NOI18N
         jMenuItem7.setText("Compra");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem7);
 
         jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Checkout.png"))); // NOI18N
@@ -218,6 +224,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
         frmMProv.setLocation(200,100);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+      InFrmCompra frmMCom = new InFrmCompra();
+        desktop.add(frmMCom);
+        frmMCom.setVisible(true);
+        frmMCom.setLocation(200,100);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
