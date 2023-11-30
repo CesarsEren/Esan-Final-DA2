@@ -226,7 +226,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-      InFrmCompra frmMCom = new InFrmCompra();
+        InFrmCompra frmMCom = new InFrmCompra();
         desktop.add(frmMCom);
         frmMCom.setVisible(true);
         frmMCom.setLocation(200,100);

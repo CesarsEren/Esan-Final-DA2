@@ -1,6 +1,5 @@
 package UI.internal;
 
-import UI.SelProveedor;
 import BEAN.CabCompra;
 import BEAN.Categoria;
 import BEAN.DetCompra;
@@ -11,6 +10,7 @@ import DAO.CabCompraDAO;
 import DAO.CategoriaDAO;
 import DAO.DetCompraDAO;
 import DAO.TipoComprobanteDAO;
+import UI.SelProducto;
 import UTIL.Util;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -18,10 +18,6 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author SamCot
- */
 public class InFrmCompra extends javax.swing.JInternalFrame {
 
     DefaultTableModel dtm1;
@@ -37,7 +33,8 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
     
     public InFrmCompra() {
         initComponents();
-        this.setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setClosable(true);
         u=new Util();
         dtm1 = (DefaultTableModel)this.TBLdetCompra.getModel();
         
@@ -526,67 +523,75 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPrecioProdActionPerformed
 
     private void btnBuscarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProdActionPerformed
-    Producto p;
+        Producto p;
         String categ;
-
-        InFrmSelProd dialog = new InFrmSelProd(new javax.swing.JFrame(), true);
+        SelProducto dialog = new SelProducto(new javax.swing.JFrame(), true);
         dialog.setVisible(true);
         p = dialog.devProd();
-
         this.txtIdProd.setText(String.valueOf(p.getIdProducto()));
         this.txtNombProd.setText(p.getDescr());
         this.txtPrecioProd.setText(String.valueOf(p.getPrecVta()));
-
         categ = this.llenaTxtCategoria(true, String.valueOf(p.getIdCategoria()));
         this.txtCatProd.setText(llenaTxtCategoria(true, String.valueOf(categ)));
         this.txtDescuentoProd.setText("0");
     }//GEN-LAST:event_btnBuscarProdActionPerformed
 
-    private void TotalCompra(){
-        double precio, cantidad, descuento, subtotal=0, total, impuesto;
-        
-        for(int i=0;i<dtm1.getRowCount();i++){
+    private String llenaTxtCategoria(boolean sw, String cad){
+        String c="";
+        Vector<Categoria> listaCate ;
+        listaCate =  catDAO.listaCategoria(sw, cad);
+        for(int i=0;i<listaCate.size(); i++){
             
-            precio = Double.parseDouble(dtm1.getValueAt(i, 2).toString());
-            cantidad = Double.parseDouble(dtm1.getValueAt(i, 3).toString());
-            
-            if (dtm1.getValueAt(i, 4).toString().isEmpty()){
-                    descuento = 0.0;
-                }else {
-                    descuento = Double.parseDouble(dtm1.getValueAt(i, 4).toString()); 
-                }
- 
-            subtotal = subtotal + precio*cantidad*(100-descuento)/100;
-        }  
-        impuesto = subtotal*0.18;
-        total = subtotal+impuesto;
-        
-        this.txtSubTotal.setText(formatDec.format(subtotal));
-        this.txtTotal.setText(formatDec.format(total));
-        this.txtIGV.setText(formatDec.format(impuesto));
+            if (sw==true){
+                c = listaCate.get(i).getDescr();
+            }
+        }
+        return c;
     }
     
-    private void limpiaProducto(){
-        this.txtIdProd.setText("");
-        this.txtNombProd.setText("");
-        this.txtPrecioProd.setText("");
-        this.txtCantProd.setText("");
-        this.txtDescuentoProd.setText("");
-        this.txtCatProd.setText("");
-        this.txtImporte.setText(""); 
+    private String llenaCmbTipoComprobante(boolean sw, String cad){
+        String t = "";
+        Vector<TipoComprobante> listaTipoComp ;
+        listaTipoComp =  tipCompDAO.listaTipoComprobante(sw, cad)    ;
+        this.CmbTipoComp.addItem("");
+        for(int i=0;i<listaTipoComp.size(); i++){
+            this.CmbTipoComp.addItem(listaTipoComp.get(i).getDescr());
+            if (sw==true){
+                t = listaTipoComp.get(i).getDescr();
+            }
+        }
+        
+        return t;
+        
     }
-        private void limpiaCompra(){
-        this.calFecha.setDate(null);
-        this.CmbTipoComp.setSelectedItem("");
-        this.txtSerie.setText("");
-        this.txtCorrelativo.setText("");
-        this.txtSubTotal.setText("");
-        this.txtIGV.setText("");
-        this.txtTotal.setText("");
-        this.txtIdProveedor.setText("");
-        this.txtNifProveedor.setText("");
-        this.txtProveedor.setText("");
+    
+    private boolean validaDatos(){
+        boolean aux = false;
+        String cad="";
+        if(this.calFecha.getDate()==null){
+            cad = "\nSeleccione la fecha de compra";
+        }
+        if(this.CmbTipoComp.getSelectedItem().toString().equals("")){
+            cad += "\nSeleccione el tipo de documento";
+        }
+        if(this.txtSerie.getText().equals("")){
+            cad += "\nIngrese el número de serie del documento";
+        }
+        if(this.txtCorrelativo.getText().equals("")){
+            cad += "\nIngrese el número de correlativo del documento";
+        }
+        if(this.txtIdProveedor.getText().equals("")){
+            cad += "\nSeleccione el proveedor";
+        }
+        if(dtm1.getRowCount()==0){
+            cad += "\nRegistre el detalle de la compra";
+        }
+        if(cad != ""){
+            JOptionPane.showMessageDialog(this, cad);
+        }
+        return aux = true;
     }
+    
     
     private void BtnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarActionPerformed
      if(this.txtIdProd.getText().isEmpty()){
@@ -617,22 +622,101 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_BtnAgregarActionPerformed
 
-    private boolean validaImportes(String dato, Double val){
-        boolean aux = true;
+        private void TotalCompra(){
+        double precio, cantidad, descuento, subtotal=0, total, impuesto;
         
-        if(dato == "porc"){
-            if(val<0 || val>20){
-                aux=false;
-            }
-        }  
-        if(dato == "cant"){
-            if(val<0){
-                aux=false;
-            }
-        } 
-       return aux ;
+        for (int i = 0; i < dtm1.getRowCount(); i++) {
+        precio = Double.parseDouble(dtm1.getValueAt(i, 2).toString().replace(",", "."));
+        cantidad = Double.parseDouble(dtm1.getValueAt(i, 3).toString().replace(",", "."));
+
+        if (dtm1.getValueAt(i, 4).toString().isEmpty()) {
+            descuento = 0.0;
+        } else {
+            descuento = Double.parseDouble(dtm1.getValueAt(i, 4).toString().replace(",", "."));
+        }
+
+        subtotal = subtotal + precio * cantidad * (100 - descuento) / 100;
+    }
+    impuesto = subtotal * 0.18;
+    total = subtotal + impuesto;
+
+    // Asegúrate de que txtIGV y txtTotal no contengan comas antes de intentar convertirlos a double
+    this.txtIGV.setText(formatDec.format(impuesto).replace(",", "."));
+    this.txtTotal.setText(formatDec.format(total).replace(",", "."));
+
+    this.txtSubTotal.setText(formatDec.format(subtotal));
     }
     
+    private void limpiaProducto(){
+        this.txtIdProd.setText("");
+        this.txtNombProd.setText("");
+        this.txtPrecioProd.setText("");
+        this.txtCantProd.setText("");
+        this.txtDescuentoProd.setText("");
+        this.txtCatProd.setText("");
+        this.txtImporte.setText(""); 
+    }
+    
+    private void guardarCompraEnBaseDeDatos() {
+    if (validaDatos()) {
+        u = new Util();
+        // Grabar Cabecera de Compra
+        CabCompra cc = new CabCompra();
+        idCompra = u.idNext("CabCompra", "idCompra");
+        cc.setIdCompra(idCompra);
+        cc.setIdProveedor(Integer.parseInt(this.txtIdProveedor.getText()));
+        cc.setIdTipComp(codigoTipoComprobante(true, this.CmbTipoComp.getSelectedItem().toString()));
+        cc.setSerie(this.txtSerie.getText());
+        cc.setCorrelativo(this.txtCorrelativo.getText());
+
+        fechaEmision = formatoFechaE.format(this.calFecha.getCalendar().getTime());
+        cc.setFecha(fechaEmision);
+
+        cc.setImpuesto(Double.parseDouble(this.txtIGV.getText()));
+        cc.setTotal(Double.parseDouble(this.txtTotal.getText()));
+        cc.setIdUsuarioReg(101); // por revisar
+        cc.setIdUsuarioMod(101); // por revisar
+        cc.setFechReg(u.obtenerFecha());
+        cc.setFechaMod(u.obtenerFecha());
+        cc.setEstado(1);
+
+        this.cabDAO.procesaCabCompra(cc, "insertar");
+
+        // Grabando en detCompra
+        int linea = 1;
+        for (int i = 0; i < dtm1.getRowCount(); i++) {
+            DetCompra dv = new DetCompra();
+            dv.setIdCompra(idCompra);
+            dv.setIdDetCompra(linea);
+            dv.setIdProducto(Integer.parseInt(dtm1.getValueAt(i, 0).toString()));
+            dv.setCantidad(Double.parseDouble(dtm1.getValueAt(i, 3).toString()));
+            dv.setImporte(Double.parseDouble(dtm1.getValueAt(i, 2).toString()));
+            dv.setDescuento(Double.parseDouble(dtm1.getValueAt(i, 4).toString()));
+            this.detDAO.procesaDetCompra(dv, "insertar");
+            linea += 1;
+        }
+
+        JOptionPane.showMessageDialog(this, "Compra Realizada con éxito");
+
+        this.limpiaCompra();
+        this.limpiaProducto();
+        dtm1.setRowCount(0);
+    }
+}
+    
+        private void limpiaCompra(){
+        this.calFecha.setDate(null);
+        this.CmbTipoComp.setSelectedItem("");
+        this.txtSerie.setText("");
+        this.txtCorrelativo.setText("");
+        this.txtSubTotal.setText("");
+        this.txtIGV.setText("");
+        this.txtTotal.setText("");
+        this.txtIdProveedor.setText("");
+        this.txtNifProveedor.setText("");
+        this.txtProveedor.setText("");
+    }
+   
     
     private void TotalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TotalizarActionPerformed
     if (this.txtIdProd.getText().equals("")){
@@ -664,6 +748,22 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_TotalizarActionPerformed
 
+        private boolean validaImportes(String dato, Double val){
+        boolean aux = true;
+        
+        if(dato == "porc"){
+            if(val<0 || val>20){
+                aux=false;
+            }
+        }  
+        if(dato == "cant"){
+            if(val<0){
+                aux=false;
+            }
+        } 
+       return aux ;
+    }
+    
     private void LimpiarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpiarBTNActionPerformed
        this.limpiaCompra();
         this.limpiaProducto();
@@ -671,49 +771,7 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_LimpiarBTNActionPerformed
 
     private void GrabarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrabarBTNActionPerformed
-     if(this.validaDatos()==true){
-            u = new Util();
-            //Grabar Cabecera de Compra
-            CabCompra cc = new CabCompra();
-            idCompra = u.idNext("CabCompra", "idCompra");
-            cc.setIdCompra(idCompra);
-            cc.setIdProveedor(Integer.parseInt(this.txtIdProveedor.getText()));
-            cc.setIdTipComp(codigoTipoComprobante(true, this.CmbTipoComp.getSelectedItem().toString()));
-            cc.setSerie(this.txtSerie.getText());
-            cc.setCorrelativo(this.txtCorrelativo.getText());
-
-            fechaEmision=formatoFechaE.format(this.calFecha.getCalendar().getTime());
-            cc.setFecha(fechaEmision);
-
-            cc.setImpuesto(Double.parseDouble(this.txtIGV.getText()));
-            cc.setTotal(Double.parseDouble(this.txtTotal.getText()));
-            cc.setIdUsuarioReg(101);//por revisar
-            cc.setIdUsuarioMod(101);//por revisar
-            cc.setFechReg(u.obtenerFecha());
-            cc.setFechaMod(u.obtenerFecha());
-            cc.setEstado(1);
-
-            this.cabDAO.procesaCabCompra(cc, "insertar");
-
-            //Grabando en detCompra
-            int linea =1;
-            for(int i=0;i<dtm1.getRowCount();i++){
-                DetCompra dv = new DetCompra();
-                dv.setIdCompra(idCompra);
-                dv.setIdDetCompra(linea);
-                dv.setIdProducto(Integer.parseInt(dtm1.getValueAt(i, 0).toString()));
-                dv.setCantidad(Double.parseDouble(dtm1.getValueAt(i, 3).toString()));
-                dv.setImporte(Double.parseDouble(dtm1.getValueAt(i, 2).toString()));
-                dv.setDescuento(Double.parseDouble(dtm1.getValueAt(i, 4).toString()));
-                this.detDAO.procesaDetCompra(dv, "insertar");
-                linea += 1;
-            }
-            JOptionPane.showMessageDialog(this, "Compra Realizada con éxito");
-
-            this.limpiaCompra();
-            this.limpiaProducto();
-            dtm1.setRowCount(0);
-        }
+    guardarCompraEnBaseDeDatos();
     }//GEN-LAST:event_GrabarBTNActionPerformed
 
     private int codigoTipoComprobante(boolean sw, String cad){
@@ -725,6 +783,7 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
         }
         return codigo;
     }
+    
     private void BtnBuscarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarProveedorActionPerformed
         Proveedor p;
         SelProveedor dialog = new SelProveedor(new javax.swing.JFrame(), true);
@@ -736,64 +795,7 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_BtnBuscarProveedorActionPerformed
 
-        private String llenaTxtCategoria(boolean sw, String cad){
-        String c="";
-        Vector<Categoria> listaCate ;
-        listaCate =  catDAO.listaCategoria(sw, cad);
-        for(int i=0;i<listaCate.size(); i++){
-            
-            if (sw==true){
-                c = listaCate.get(i).getDescr();
-            }
-        }
-        return c;
-    }
-        
-        private String llenaCmbTipoComprobante(boolean sw, String cad){
-        String t = "";
-        Vector<TipoComprobante> listaTipoComp ;
-        listaTipoComp =  tipCompDAO.listaTipoComprobante(sw, cad)    ;
-        this.CmbTipoComp.addItem("");
-        for(int i=0;i<listaTipoComp.size(); i++){
-            this.CmbTipoComp.addItem(listaTipoComp.get(i).getDescr());
-            if (sw==true){
-                t = listaTipoComp.get(i).getDescr();
-            }
-        }
-        
-        return t;
-        
-    }
-        private boolean validaDatos(){
-        boolean aux = false;
-        String cad="";
-        if(this.calFecha.getDate()==null){
-            cad = "\nSeleccione la fecha de compra";
-        }
-        if(this.CmbTipoComp.getSelectedItem().toString().equals("")){
-            cad += "\nSeleccione el tipo de documento";
-        }
-        if(this.txtSerie.getText().equals("")){
-            cad += "\nIngrese el número de serie del documento";
-        }
-        if(this.txtCorrelativo.getText().equals("")){
-            cad += "\nIngrese el número de correlativo del documento";
-        }
-        if(this.txtIdProveedor.getText().equals("")){
-            cad += "\nSeleccione el proveedor";
-        }
-        if(dtm1.getRowCount()==0){
-            cad += "\nRegistre el detalle de la compra";
-        }
-        if(cad != ""){
-            JOptionPane.showMessageDialog(this, cad);
-        }
-        return aux = true;
-    }
 
-        
-    
-    
     /**
      * @param args the command line arguments
      */
