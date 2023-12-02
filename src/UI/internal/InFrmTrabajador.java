@@ -53,12 +53,12 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
      */
     TrabajadorDAO trabajadorDAO = new TrabajadorDAOImpl();
     UbigeoUtilDAO ubigeoDAO = new UbigeoUtilDAOImpl();
-
+    
     DefaultTableModel defaultTableModel = new DefaultTableModel();
     Object[][] select, selectaux;
     DefaultComboBoxModel<ComboData> boxModel = null;
     DefaultComboBoxModel<String> boxDep, boxProv, boxDisc = null;
-
+    
     public InFrmTrabajador() {
         initComponents();
         default_config();
@@ -67,14 +67,14 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         config_ubigeo();
         default_validaciones();
     }
-
+    
     public void default_config() {
         this.setTitle("Trabajador");
         this.setClosable(true);
         this.setResizable(true);
         this.txtBuscador.setEnabled(false);
     }
-
+    
     public void config_ubigeo() {
         boxDep = ubigeoDAO.llenarcomboDep();
         cboPuesto.setModel(boxModel);
@@ -82,7 +82,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         cboDepa.setSelectedIndex(2);
         txtUbigeo.setText(ubigeoDAO.getUbigeoByDeptProvDist(cboDepa.getSelectedItem().toString(), cboProv.getSelectedItem().toString(), cboDistrito.getSelectedItem().toString()));
     }
-
+    
     public void default_validaciones() {
         txtCelular.setDocument(new NumberOnlyDocument(9));
         txtTelefono.setDocument(new NumberOnlyDocument(6));
@@ -525,7 +525,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         limpiar();
     }//GEN-LAST:event_btnNuevoActionPerformed
-
+    
     void limpiar() {
         txtApeMaterno.setText("");
         txtApePaterno.setText("");
@@ -541,7 +541,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         txtnroDocumento.setText("");
         btnregistro.setText("Registrar");
     }
-
+    
     void setDataTrabajador(Trabajador t, ComboData p) {
         txtApeMaterno.setText(t.getApeMat());
         txtApePaterno.setText(t.getApePat());
@@ -563,7 +563,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
             rbInactivo.setSelected(true);
         }
     }
-
+    
     private static String getSelectedButtonValue(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -573,7 +573,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         }
         return null;
     }
-
+    
     public boolean llenarError(JTextField... jTxtFields) {
         JPanel panel = new JPanel();
         StringJoiner joiner = new StringJoiner("<br>");
@@ -626,7 +626,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
                         txtnroDocumento,
                         txtTelefono,
                         txtFechaNacimiento);
-
+        
         if (!txtFechaNacimiento.getText().isEmpty()) {
             LocalDate localDate = LocalDate.parse(txtFechaNacimiento.getText());
             t.setFecha_nacimiento(localDate);
@@ -653,14 +653,14 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         }
 
     }//GEN-LAST:event_btnregistroActionPerformed
-
+    
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here: 
         String buscar = cboBuscar.getSelectedItem().toString();
         switch (buscar) {
             case "TODOS":
-
+                
                 defaultTableModel = trabajadorDAO.llenartabla();
                 break;
             case "DNI":
@@ -696,7 +696,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
             txtBuscador.setEnabled(true);
         }
     }//GEN-LAST:event_cboBuscarItemStateChanged
-
+    
     private static int findIndex(DefaultComboBoxModel<ComboData> model, ComboData value) {
         for (int i = 0; i < model.getSize(); i++) {
             if (model.getElementAt(i).getId() == (value.getId())) {
@@ -707,7 +707,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
     }
 
     private void jtblTrabajadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblTrabajadorMouseClicked
-
+        
         int selectedRow = jtblTrabajador.getSelectedRow();
         if (selectedRow != -1) {
             // Obtener datos de la fila seleccionada
@@ -719,23 +719,23 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
             String apePat = (String) jtblTrabajador.getValueAt(selectedRow, 4);
             String apeMat = (String) jtblTrabajador.getValueAt(selectedRow, 5);
             String ubigeo = (String) jtblTrabajador.getValueAt(selectedRow, 6);
-
+            
             Object[][] ubigeos = ubigeoDAO.getRowByIdUbigeo(ubigeo);
             cboDepa.setSelectedItem(ubigeos[0][1].toString());
             cboProv.setSelectedItem(ubigeos[0][2].toString());
             cboDistrito.setSelectedItem(ubigeos[0][3].toString());
-
+            
             String direccion = (String) jtblTrabajador.getValueAt(selectedRow, 7);
             int genero = (int) (("Masculino".equals(jtblTrabajador.getValueAt(selectedRow, 8).toString())) ? 1 : 0);//Integer.parseInt((String) jtblTrabajador.getValueAt(selectedRow, 8));
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate fechaNacimiento = LocalDate.parse(jtblTrabajador.getValueAt(selectedRow, 9).toString(), formatter);
-
+            
             String celular = (String) jtblTrabajador.getValueAt(selectedRow, 10);
             String telefono = (String) jtblTrabajador.getValueAt(selectedRow, 11);
             String correo = (String) jtblTrabajador.getValueAt(selectedRow, 12);
             short estado = (short) (("Activo".equals(jtblTrabajador.getValueAt(selectedRow, 13).toString())) ? 1 : 0);
-
+            
             Trabajador trabajador = new Trabajador(idTrabajador, puesto.getId(), docIdent, nombre, apePat, apeMat,
                     ubigeo, direccion, genero, fechaNacimiento, celular, telefono, correo, estado);
             setDataTrabajador(trabajador, puesto);
@@ -792,7 +792,13 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
 
-
+        if (this.trabajadorDAO.eliminar(Integer.parseInt(txtid.getText()))) {
+            JOptionPane.showMessageDialog(this, "Trabajador Eliminar con éxito");
+            jtblTrabajador.setModel(trabajadorDAO.llenartabla());
+            limpiar();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se puede Eliminar Trabajador");
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
 

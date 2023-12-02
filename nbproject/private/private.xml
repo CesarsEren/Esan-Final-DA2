@@ -4,11 +4,41 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UI/internal/InFrmTienda.java</file>
-            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/TrabajadorDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UTIL/TextOnlyDocument.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/BEAN/Usuario.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UTIL/NumberOnlyDocumentSize.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/UtilVentasDAOImpl.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/UtilClienteDAOImpl.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/config/script_3.txt</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UI/FrmPrincipal.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/UbigeoUtilDAOImpl.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/UtilProductoDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/BEAN/DetVenta.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/UbigeoUtilDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/config/script_1.txt</file>
             <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UI/internal/InFrmTrabajador.java</file>
-            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/TrabajadorDAOImpl.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/UtilComprasDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UTIL/EmailOnlyDocument.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/UtilComprasDAOImpl.java</file>
             <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UTIL/UtilEmailSender.java</file>
-            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/config/reports/trabajador_report.jrxml</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UI/FrmLogin.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UTIL/NumberOnlyDocument.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/config/script_2.txt</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UI/internal/InFrmCorreo.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/TrabajadorDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/TrabajadorDAOImpl.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/UtilClienteDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/ClienteDAOImpl.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UI/internal/InFrmVenta.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Conexion.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/ClienteDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/config/reports/cpe.jrxml</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/TiendaDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/BEAN/CabVenta.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/UtilVentasDAO.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/config/script.txt</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/DAO/Impl/UtilProductoDAOImpl.java</file>
+            <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/UI/FrmConfig.java</file>
             <file>file:/C:/Users/xhesm/OneDrive/Documentos/NetBeansProjects/ProyectoFinal/src/proyectofinal/ProyectoFinal.java</file>
         </group>
     </open-files>

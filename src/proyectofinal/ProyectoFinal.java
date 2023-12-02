@@ -52,7 +52,6 @@ public class ProyectoFinal {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-
                 Properties properties = new Properties();
                 String filePath = "config/app.properties";
 

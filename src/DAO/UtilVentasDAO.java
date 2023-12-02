@@ -4,6 +4,10 @@
  */
 package DAO;
 
+import BEAN.CabVenta;
+import BEAN.DetVenta;
+import java.util.List;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,7 +19,12 @@ public interface UtilVentasDAO {
     public void ImprimirReporte();
 
     public void guardarReporte();
-    
+
+    public void mostrarCpe(Map<String, Object> map);
+
     public DefaultTableModel llenartabla();
 
+    public boolean guardarVenta(CabVenta cabVenta, List<DetVenta> lsDetVenta);
+
+    public Object[][] buscarSerieAndNumeroReply(String serie, String correlativo);
 }

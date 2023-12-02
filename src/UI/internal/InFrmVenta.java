@@ -4,13 +4,31 @@
  */
 package UI.internal;
 
+import BEAN.CabVenta;
+import BEAN.DetVenta;
+import DAO.Conexion;
 import DAO.Impl.UtilClienteDAOImpl;
 import DAO.Impl.UtilProductoDAOImpl;
+import DAO.Impl.UtilVentasDAOImpl;
 import DAO.UtilClienteDAO;
 import DAO.UtilProductoDAO;
+import DAO.UtilVentasDAO;
+import UI.FrmPrincipal;
 import UTIL.NumberOnlyDocument;
 import UTIL.NumberOnlyDocumentSize;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringJoiner;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,8 +44,9 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
     DefaultTableModel model = new DefaultTableModel();
     DecimalFormat decimalFormat = new DecimalFormat("#0.00");
     UtilClienteDAO clienteDAO = new UtilClienteDAOImpl();
+    UtilVentasDAO utilVentasDAO = new UtilVentasDAOImpl();
 
-    public int ID_CLIENTE;
+    public int ID_CLIENTE = 0;
 
     public InFrmVenta() {
         initComponents();
@@ -94,10 +113,10 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtdniRuc1 = new javax.swing.JTextField();
-        txtdniRuc2 = new javax.swing.JTextField();
+        txtSerie = new javax.swing.JTextField();
+        txtNro = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cboTipoDoc = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         txtBuscarProd = new javax.swing.JTextField();
@@ -130,6 +149,7 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
         jLabel13.setText("Precio Unitario :");
 
         txtPrdID.setEnabled(false);
+        txtPrdID.setName("Producto Seleccionado"); // NOI18N
 
         txtPrdDesc.setEnabled(false);
 
@@ -182,6 +202,7 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
 
         jLabel14.setText("Cantidad :");
 
+        txtCant.setName("Campo Cantidad"); // NOI18N
         txtCant.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCantActionPerformed(evt);
@@ -312,6 +333,7 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Detalle Cliente"));
 
         txtCliDoc.setEnabled(false);
+        txtCliDoc.setName("Documento Cliente"); // NOI18N
 
         jLabel2.setText("Documento");
 
@@ -354,9 +376,13 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Serie-Numero");
 
+        txtSerie.setName("Serie Documento"); // NOI18N
+
+        txtNro.setName("Nro Documento"); // NOI18N
+
         jLabel6.setText("Tipo Documento");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FACTURA", "BOLETA" }));
+        cboTipoDoc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BOLETA" }));
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -366,15 +392,15 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cboTipoDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtdniRuc1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSerie, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtdniRuc2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNro, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -382,11 +408,11 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboTipoDoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel4)
-                    .addComponent(txtdniRuc1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtdniRuc2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addContainerGap())
         );
@@ -540,7 +566,103 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+
+        boolean condicionerror = llenarError(txtCliDoc, txtSerie, txtNro);
+        if (!condicionerror) {
+            int filas = model.getRowCount();
+            if (filas == 0) {
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("<html><font color='red'>Deben haber productos en el documento</font></html>"));
+                JOptionPane.showOptionDialog(
+                        null,
+                        panel,
+                        "Alerta",
+                        JOptionPane.WARNING_MESSAGE,
+                        JOptionPane.WARNING_MESSAGE,
+                        null,
+                        new Object[]{},
+                        null
+                );
+            } else {
+                Object[][] objs = utilVentasDAO.buscarSerieAndNumeroReply(txtSerie.getText().trim(), txtNro.getText().trim());
+                if (objs.length <= 0) {
+                    JOptionPane.showMessageDialog(this, "EL NRO DE SERIE Y CORRELATIVO YA EXISTEN , VUELVA A INTENTARLO CON OTROS");
+                } else {
+                    CabVenta cabVenta = new CabVenta();
+                    List<DetVenta> detventals = new ArrayList<>();
+                    cabVenta.setCorrelativo(txtNro.getText());
+                    cabVenta.setSerie(txtSerie.getText());
+                    cabVenta.setTotal(Double.parseDouble(lblTotal.getText()));
+                    cabVenta.setImpuesto(Double.parseDouble(lblImpuesto.getText()));
+                    cabVenta.setIdUsuarioReg(FrmPrincipal.ID_USUARIO_SESION);
+                    cabVenta.setIdCliente(ID_CLIENTE);
+                    int idTipODoc = cboTipoDoc.getSelectedIndex() + 1;
+                    cabVenta.setIdTipComp(idTipODoc);
+
+                    int rowCount = jbtlDet.getRowCount();
+
+                    for (int i = 0; i < rowCount; i++) {
+                        //   sum += Double.parseDouble(jbtlDet.getValueAt(i, columnIndex) + "");
+                        DetVenta detVenta = new DetVenta();
+                        detVenta.setIdProducto(Integer.parseInt(jbtlDet.getValueAt(i, 0) + ""));
+                        detVenta.setCantidad(Integer.parseInt(jbtlDet.getValueAt(i, 3) + ""));
+                        detVenta.setDescuento(Integer.parseInt(jbtlDet.getValueAt(i, 4) + ""));
+                        detVenta.setImporte(Double.parseDouble(jbtlDet.getValueAt(i, 5) + ""));
+                        detventals.add(detVenta);
+                    }
+
+                    boolean registrado = utilVentasDAO.guardarVenta(cabVenta, detventals);
+                    if (registrado) {
+
+                        int opcion = JOptionPane.showConfirmDialog(this, "Venta Registrada, ¿Desea Imprimir?");
+                        if (opcion == JOptionPane.YES_OPTION) {
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("id_venta", cabVenta.getIdVenta());
+                            map.put("SerieNro", cabVenta.getSerie() + "-" + cabVenta.getCorrelativo());
+                            map.put("Nombres", txtCliDatos.getText());
+                            map.put("dni", txtCliDoc.getText());
+                            map.put("impuesto", lblImpuesto.getText());
+                            map.put("total", lblTotal.getText());
+                            utilVentasDAO.mostrarCpe(map);
+                            // El usuario seleccionó "Sí" 
+                            //System.out.println("Usuario seleccionó Sí");
+                            // Aquí puedes poner el código que quieres ejecutar cuando el usuario selecciona "Sí"
+                        } else {
+                            // El usuario seleccionó "No" o cerró el cuadro de diálogo
+                            System.out.println("Usuario seleccionó No o cerró el cuadro de diálogo");
+                            // Aquí puedes poner el código que quieres ejecutar cuando el usuario selecciona "No" o cierra el cuadro de diálogo
+                        }
+
+                    }
+                }
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    public boolean llenarError(JTextField... jTxtFields) {
+        JPanel panel = new JPanel();
+        StringJoiner joiner = new StringJoiner("<br>");
+        for (JTextField jtxtfield : jTxtFields) {
+            System.out.println("field" + jtxtfield.getName());
+            if (jtxtfield.getText().isEmpty()) {
+                joiner.add(jtxtfield.getName().concat(" no puede estar vacío"));
+            }
+        }
+        if (!joiner.toString().isEmpty()) {
+            panel.add(new JLabel("<html><font color='red'>" + joiner.toString() + "</font></html>"));
+            JOptionPane.showOptionDialog(
+                    null,
+                    panel,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    new Object[]{},
+                    null
+            );
+        }
+        return !joiner.toString().isEmpty();
+    }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -565,29 +687,31 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
     int selectRow = -1;
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
-        System.out.println("selectRow1 " + selectRow);
-        if (selectRow != -1 && btnAgregar.getText().equals("↓↓↓↓ Actualizar ↓↓↓↓")) {
-            btnAgregar.setText(" ↓↓↓↓ Agregar ↓↓↓↓");
-            System.out.println("selectRow" + selectRow);
+//txtCant.getText().isEmpty() || txtPrdID.getText().isEmpty()
+        if (!llenarError(txtCant, txtPrdID)) {
+            System.out.println("selectRow1 " + selectRow);
+            if (selectRow != -1 && btnAgregar.getText().equals("↓↓↓↓ Actualizar ↓↓↓↓")) {
+                btnAgregar.setText(" ↓↓↓↓ Agregar ↓↓↓↓");
+                System.out.println("selectRow" + selectRow);
 
-            model.setValueAt(txtPrdID.getText(), selectRow, 0);
-            model.setValueAt(txtPrdDesc.getText(), selectRow, 1);
-            model.setValueAt(txtPrdPrU.getText(), selectRow, 2);
-            model.setValueAt(txtCant.getText(), selectRow, 3);
-            model.setValueAt(txtDesc.getText().trim().isEmpty() ? "0" : txtDesc.getText().trim(), selectRow, 4);
-            model.setValueAt(txtsubT.getText(), selectRow, 5);
+                model.setValueAt(txtPrdID.getText(), selectRow, 0);
+                model.setValueAt(txtPrdDesc.getText(), selectRow, 1);
+                model.setValueAt(txtPrdPrU.getText(), selectRow, 2);
+                model.setValueAt(txtCant.getText(), selectRow, 3);
+                model.setValueAt(txtDesc.getText().trim().isEmpty() ? "0" : txtDesc.getText().trim(), selectRow, 4);
+                model.setValueAt(txtsubT.getText(), selectRow, 5);
 
-        } else {//if (btnAgregar.getText().equals(" ↓↓↓↓ Agregar ↓↓↓↓")) {
-            btnAgregar.setText(" ↓↓↓↓ Agregar ↓↓↓↓");
-            System.out.println("guardandno");
-            Object[] newRow = {txtPrdID.getText(), txtPrdDesc.getText(), txtPrdPrU.getText(), txtCant.getText(), txtDesc.getText().trim().isEmpty() ? "0" : txtDesc.getText().trim(), txtsubT.getText()};
-            model.addRow(newRow);
+            } else {//if (btnAgregar.getText().equals(" ↓↓↓↓ Agregar ↓↓↓↓")) {
+                btnAgregar.setText(" ↓↓↓↓ Agregar ↓↓↓↓");
+                System.out.println("guardandno");
+                Object[] newRow = {txtPrdID.getText(), txtPrdDesc.getText(), txtPrdPrU.getText(), txtCant.getText(), txtDesc.getText().trim().isEmpty() ? "0" : txtDesc.getText().trim(), txtsubT.getText()};
+                model.addRow(newRow);
+            }
+            txtDesc.setText("");
+            txtCant.setText("");
+            txtsubT.setText("");
+            calcularImpuestoYTotal();
         }
-        txtDesc.setText("");
-        txtCant.setText("");
-        txtsubT.setText("");
-
-        calcularImpuestoYTotal();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void mnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnActualizarActionPerformed
@@ -681,9 +805,9 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JComboBox<String> cboTipoDoc;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -721,12 +845,12 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtCliDatos;
     private javax.swing.JTextField txtCliDoc;
     private javax.swing.JTextField txtDesc;
+    private javax.swing.JTextField txtNro;
     private javax.swing.JTextField txtPrdDesc;
     private javax.swing.JTextField txtPrdID;
     private javax.swing.JTextField txtPrdPrU;
+    private javax.swing.JTextField txtSerie;
     private javax.swing.JTextField txtdniRuc;
-    private javax.swing.JTextField txtdniRuc1;
-    private javax.swing.JTextField txtdniRuc2;
     private javax.swing.JTextField txtsubT;
     // End of variables declaration//GEN-END:variables
 

@@ -4,10 +4,15 @@
  */
 package DAO.Impl;
 
+import BEAN.CabVenta;
+import BEAN.DetVenta;
 import DAO.Conexion;
 import DAO.UtilVentasDAO;
+import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -59,4 +64,65 @@ public class UtilVentasDAOImpl extends Conexion implements UtilVentasDAO {
         }
 
     }
+
+    @Override
+    public boolean guardarVenta(CabVenta cabVenta, List<DetVenta> lsDetVenta) {
+
+        int last_id_venta = selectSQLMaxId("CabVenta", "idVenta", null);
+        cabVenta.setIdVenta(++last_id_venta);
+        StringJoiner joiner = new StringJoiner(",");
+        joiner.add(cabVenta.getIdVenta() + "")
+                .add(cabVenta.getIdCliente() + "")
+                .add(cabVenta.getIdTipComp() + "")
+                .add(comillas(cabVenta.getSerie()))
+                .add(comillas(cabVenta.getCorrelativo()))
+                .add("GETDATE()")
+                .add(cabVenta.getImpuesto() + "")
+                .add(cabVenta.getTotal() + "")
+                .add(cabVenta.getIdUsuarioReg() + "")
+                .add("GETDATE()")
+                .add("1");
+
+        boolean insert_int = insert("CabVenta", "idVenta,idCliente,idTipComp,serie,correlativo,fecha,impuesto,total,idUsuarioReg,fechReg,estado", joiner.toString());
+        if (insert_int) {
+            int idnext = selectSQLMaxId("DetVenta", "idDetVenta", null);
+
+            for (DetVenta detVenta : lsDetVenta) {
+                StringJoiner detV = new StringJoiner(",");
+                //int detVentaId = Integer.parseInt("" + idnext);
+                detVenta.setIdDetVenta(idnext++);
+                detVenta.setIdVenta(last_id_venta);
+                detV.add(detVenta.getIdVenta() + "")
+                        .add(detVenta.getIdDetVenta() + "")
+                        .add(detVenta.getIdProducto() + "")
+                        .add(detVenta.getCantidad() + "")
+                        .add(detVenta.getImporte() + "")
+                        .add(detVenta.getDescuento() + "");
+                insert("DetVenta", "idVenta,idDetVenta,idProducto,cantidad,importe,descuento", detV.toString());
+            }
+        }
+
+        return insert_int;
+    }
+
+    public String comillas(String str) {
+        return "'" + str + "'";
+    }
+
+    @Override
+    public void mostrarCpe(Map<String, Object> map) {
+        try {
+            JasperReport jasperReport = JasperCompileManager.compileReport("config/reports/cpe.jrxml");
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, this.conectardb());
+            JasperViewer.viewReport(jasperPrint, false);
+        } catch (JRException ex) {
+            Logger.getLogger(TrabajadorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public Object[][] buscarSerieAndNumeroReply(String serie, String correlativo) {
+        return select("CabVenta", "idVenta", "serie=" + comillas(serie) + "&correlativo=" + comillas(correlativo));
+    }
+
 }

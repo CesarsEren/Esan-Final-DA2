@@ -134,7 +134,7 @@ from Trabajador]]>
 				</textField>
 			</frame>
 			<image>
-				<reportElement x="453" y="0" width="104" height="132" uuid="fbdfbef8-5448-4bb6-877c-91398ae33c0b"/>
+				<reportElement x="453" y="0" width="100" height="132" uuid="fbdfbef8-5448-4bb6-877c-91398ae33c0b"/>
 				<imageExpression><![CDATA["C:\\Users\\xhesm\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoFinal\\config\\reports\\cherry.jpg"]]></imageExpression>
 			</image>
 		</band>

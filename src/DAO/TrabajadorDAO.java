@@ -27,5 +27,7 @@ public interface TrabajadorDAO {
     public DefaultComboBoxModel llenarcombo();
     
     public void ImprimirReporte();
+     
+    public boolean eliminar(int id_trabajador) ;
 
 }

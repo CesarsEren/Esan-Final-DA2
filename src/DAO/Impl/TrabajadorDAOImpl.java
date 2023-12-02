@@ -25,7 +25,6 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.view.JasperViewer;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import net.sf.jasperreports.engine.JRException;
@@ -33,16 +32,13 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.JRPdfExporter; 
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+
 /**
  *
  * @author xhesm
  */
 public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
-
-    public TrabajadorDAOImpl() {
-
-    }
 
     @Override
     public DefaultTableModel llenartabla() {
@@ -78,12 +74,9 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
     @Override
     public boolean save(Trabajador t) {
-
         StringJoiner registros = new StringJoiner(",");
-
         if (t.getIdTrabajador() == 0) {
-            Object[][] objs = select("Trabajador", "max(idTrabajador) as idTrabajador", null);
-            int lastID = Integer.parseInt(objs[0][0] + "");
+            int lastID = selectSQLMaxId("Trabajador", "idTrabajador", null);
             registros.add((++lastID) + "");
         }
         registros
@@ -124,12 +117,24 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
             JasperReport jasperReport = JasperCompileManager.compileReport("config/reports/trabajador_report.jrxml");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, this.conectardb());
             JasperViewer.viewReport(jasperPrint, false);
-
+            /*
             String pdfFile = "config/temporal-reports/informe.pdf";
-            JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFile);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFile);*/
         } catch (JRException ex) {
             Logger.getLogger(TrabajadorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
-    
+    }
+
+    @Override
+    public boolean eliminar(int id_trabajador) {
+        boolean rs = false;
+        Object[][] slc = select("Usuario", "count(idUsuario) as cantidad", "idTrabajador=" + id_trabajador);
+        rs = Integer.parseInt(slc[0][0] + "") > 0;
+
+        if (!rs) {
+            rs = delete("Trabajador", "idCliente" + id_trabajador);
+        }
+        return rs;
+    }
+
 }

@@ -201,6 +201,7 @@
             <Component class="javax.swing.JTextField" name="txtPrdID">
               <Properties>
                 <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="Producto Seleccionado" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtPrdDesc">
@@ -268,6 +269,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtCant">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="Campo Cantidad" noResource="true"/>
+              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCantActionPerformed"/>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCantKeyReleased"/>
@@ -475,6 +479,7 @@
             <Component class="javax.swing.JTextField" name="txtCliDoc">
               <Properties>
                 <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="Documento Cliente" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
@@ -510,15 +515,15 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jComboBox1" min="-2" pref="108" max="-2" attributes="0"/>
+                      <Component id="cboTipoDoc" min="-2" pref="108" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="txtdniRuc1" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="txtSerie" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" pref="5" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtdniRuc2" min="-2" pref="51" max="-2" attributes="0"/>
+                      <Component id="txtNro" min="-2" pref="51" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -528,11 +533,11 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboTipoDoc" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtdniRuc1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtdniRuc2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtSerie" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtNro" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -551,21 +556,26 @@
                 <Property name="text" type="java.lang.String" value="Serie-Numero"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtdniRuc1">
+            <Component class="javax.swing.JTextField" name="txtSerie">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="Serie Documento" noResource="true"/>
+              </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtdniRuc2">
+            <Component class="javax.swing.JTextField" name="txtNro">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="Nro Documento" noResource="true"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Tipo Documento"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jComboBox1">
+            <Component class="javax.swing.JComboBox" name="cboTipoDoc">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="FACTURA"/>
-                    <StringItem index="1" value="BOLETA"/>
+                  <StringArray count="1">
+                    <StringItem index="0" value="BOLETA"/>
                   </StringArray>
                 </Property>
               </Properties>

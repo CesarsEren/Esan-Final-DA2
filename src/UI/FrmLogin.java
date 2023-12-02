@@ -6,6 +6,8 @@ package UI;
 
 import DAO.ClienteDAO;
 import DAO.Impl.ClienteDAOImpl;
+import DAO.Impl.UsuarioDAOImpl;
+import DAO.UsuarioDAO;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.StringJoiner;
@@ -24,7 +26,7 @@ public class FrmLogin extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    ClienteDAO aO = new ClienteDAOImpl();
+    UsuarioDAO aO = new UsuarioDAOImpl();
 
     public FrmLogin() {
         initComponents();
@@ -149,6 +151,7 @@ public class FrmLogin extends javax.swing.JFrame {
         if (dt.length > 0) {
             FrmPrincipal.ID_USUARIO_SESION = Integer.parseInt(dt[0][0] + "");
             FrmPrincipal.DATA_USUARIO_SESION = dt[0][3] + "/" + dt[0][2] + "/" + dt[0][1];
+            FrmPrincipal.DATA_ROL = dt[0][3] + "";
             this.dispose();
             new FrmPrincipal().setVisible(true);
         } else {
