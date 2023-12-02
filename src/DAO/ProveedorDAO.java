@@ -4,6 +4,7 @@ import BEAN.Proveedor;
 import UTIL.DbBean;
 import java.sql.ResultSet;
 import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
 
 public class ProveedorDAO {
     public ProveedorDAO(){
@@ -130,5 +131,6 @@ public class ProveedorDAO {
         
         return sw;
     }
+    
          
 }

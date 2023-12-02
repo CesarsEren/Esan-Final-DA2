@@ -118,7 +118,7 @@ public class Conexion {
         int registros = 0;
         try {
             PreparedStatement pstm = conectardb().prepareStatement(SQL_Consulta);
-            try ( ResultSet res = pstm.executeQuery()) {
+            try (ResultSet res = pstm.executeQuery()) {
                 res.next();
                 registros = res.getInt("total");
                 System.out.println("" + SQL_Consulta);
@@ -381,7 +381,7 @@ public class Conexion {
         ResultSet Rs = null;
         try {
             System.out.println("" + SQL);
-            Statement Cmd = Conexion.dbCon.createStatement();
+            Statement Cmd = this.conectardb().createStatement();
             Rs = Cmd.executeQuery(SQL);
             System.out.println("" + Rs.toString());
         } catch (SQLException ex) {

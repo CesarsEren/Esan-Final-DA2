@@ -6,7 +6,6 @@ package UI;
 
 import UI.internal.InFrmCompra;
 import UI.internal.InFrmProveedor;
-import UI.internal.InFrmTrabajador;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -205,11 +204,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-        InFrmTrabajador frmTrabajador = new InFrmTrabajador();
-        desktop.add(frmTrabajador);
-        frmTrabajador.setVisible(true);
-        frmTrabajador.setLocation(200, 100);
+
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked

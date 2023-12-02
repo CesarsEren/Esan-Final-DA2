@@ -1,27 +1,57 @@
 package UI.internal;
 
+import BEAN.ComboData;
 import BEAN.Proveedor;
 import BEAN.Ubigeo;
+import DAO.Impl.TrabajadorDAOImpl;
+import DAO.Impl.UbigeoUtilDAOImpl;
 import DAO.ProveedorDAO;
+import DAO.TrabajadorDAO;
+import DAO.UbigeoUtilDAO;
 import UI.JDUbigeo;
 import UTIL.Util;
 import java.util.Vector;
 import javax.swing.JOptionPane;
+import UTIL.EmailOnlyDocument;
+import UTIL.NumberOnlyDocument;
+import UTIL.TextOnlyDocument;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 public class InFrmProveedor extends javax.swing.JInternalFrame {
     ProveedorDAO provDao;
     DefaultTableModel dtm;
     int idProveedor;
+    DefaultTableModel defaultTableModel = new DefaultTableModel();
+    Object[][] select, selectaux;
+    DefaultComboBoxModel<ComboData> boxModel = null;
+    DefaultComboBoxModel<String> boxDep, boxProv, boxDisc = null;
+    UbigeoUtilDAO ubigeoDAO = new UbigeoUtilDAOImpl();
     public InFrmProveedor() {
         provDao = new ProveedorDAO();
         initComponents();
+        default_config();
         this.setClosable(true);
         dtm = (DefaultTableModel)this.TBLproveedores.getModel();
         llenaTblProveedor(false, "");
+
+        default_validaciones();
+
         llenaCmbEstado();
     }
-    
+        public void default_config() {
+        this.setTitle("Proveedor");
+        this.setClosable(true);
+        this.setResizable(true);
+    }
+        
+    public void config_ubigeo() {
+        boxDep = ubigeoDAO.llenarcomboDep();
+        CmbDepartamento.setModel(boxDep);
+        CmbProvincia.setModel(boxDep);
+        CmbDepartamento.setSelectedIndex(2);
+        TXTubigeo1.setText(ubigeoDAO.getUbigeoByDeptProvDist(CmbDepartamento.getSelectedItem().toString(), CmbProvincia.getSelectedItem().toString(), CmbDistrito.getSelectedItem().toString()));
+    }
     private boolean validar(){
         boolean sw = false;
         String sql = "";
@@ -54,7 +84,12 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
        }
        return sw;
     }
-    
+    public void default_validaciones() {
+        TXTnif.setDocument(new NumberOnlyDocument(11));
+        TXTcelular.setDocument(new NumberOnlyDocument(9));
+        TXTtelefono.setDocument(new NumberOnlyDocument(9));
+        TXTcorreo.setDocument(new EmailOnlyDocument(60));
+    }
     private void limpia(){
         this.TXTid.setText("");
         this.TXTnif.setText("");
@@ -72,8 +107,16 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
     }
     private void llenaCmbEstado(){
         this.CMBestado.addItem("");
-        this.CMBestado.addItem("Activo");
+        this.CMBestado.addItem("Activo"); 
         this.CMBestado.addItem(("No Activo"));
+    }
+        private static int findIndex(DefaultComboBoxModel<ComboData> model, ComboData value) {
+        for (int i = 0; i < model.getSize(); i++) {
+            if (model.getElementAt(i).getId() == (value.getId())) {
+                return i;
+            }
+        }
+        return -1;
     }
     
      private void llenaTblProveedor(boolean sw, String str){
@@ -107,10 +150,7 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         TBLproveedores = new javax.swing.JTable();
-        BtnEliminar = new javax.swing.JButton();
-        BtnGrabar = new javax.swing.JButton();
         BtnSalir = new javax.swing.JButton();
-        BtnLimpiar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -127,10 +167,18 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         TXTcorreo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        BtnUbigeo = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        BtnGrabar = new javax.swing.JButton();
+        BtnEliminar = new javax.swing.JButton();
+        BtnLimpiar = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        CmbDistrito = new javax.swing.JComboBox<>();
+        CmbProvincia = new javax.swing.JComboBox<>();
+        CmbDepartamento = new javax.swing.JComboBox<>();
         TXTbuscar = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
 
@@ -152,6 +200,8 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        TBLproveedores.setGridColor(new java.awt.Color(102, 204, 0));
+        TBLproveedores.setSelectionBackground(new java.awt.Color(102, 204, 0));
         TBLproveedores.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TBLproveedoresMouseClicked(evt);
@@ -159,36 +209,10 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(TBLproveedores);
 
-        BtnEliminar.setText("Eliminar");
-        BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnEliminarActionPerformed(evt);
-            }
-        });
-
-        BtnGrabar.setText("Grabar");
-        BtnGrabar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnGrabarActionPerformed(evt);
-            }
-        });
-
         BtnSalir.setText("Salir");
         BtnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnSalirActionPerformed(evt);
-            }
-        });
-
-        BtnLimpiar.setText("Limpiar");
-        BtnLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                BtnLimpiarMouseClicked(evt);
-            }
-        });
-        BtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnLimpiarActionPerformed(evt);
             }
         });
 
@@ -243,6 +267,12 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
             }
         });
 
+        CMBestado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CMBestadoActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Id");
 
         jLabel3.setText("NIF");
@@ -255,18 +285,71 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
 
         jLabel4.setText("Nombre");
 
-        BtnUbigeo.setText("jButton1");
-        BtnUbigeo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BtnUbigeoActionPerformed(evt);
-            }
-        });
-
-        jLabel5.setText("ID Ubigeo");
+        jLabel5.setText("Distrito");
 
         jLabel6.setText("Direccion");
 
         jLabel7.setText("Celular");
+
+        BtnGrabar.setText("Grabar");
+        BtnGrabar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnGrabarActionPerformed(evt);
+            }
+        });
+
+        BtnEliminar.setText("Eliminar");
+        BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnEliminarActionPerformed(evt);
+            }
+        });
+
+        BtnLimpiar.setText("Nuevo");
+        BtnLimpiar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                BtnLimpiarMouseClicked(evt);
+            }
+        });
+        BtnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLimpiarActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setText("ID Ubigeo");
+
+        jLabel13.setText("Provincia");
+
+        jLabel14.setText("Departamento");
+
+        CmbDistrito.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                CmbDistritoItemStateChanged(evt);
+            }
+        });
+        CmbDistrito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CmbDistritoActionPerformed(evt);
+            }
+        });
+
+        CmbProvincia.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                CmbProvinciaItemStateChanged(evt);
+            }
+        });
+        CmbProvincia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CmbProvinciaActionPerformed(evt);
+            }
+        });
+
+        CmbDepartamento.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                CmbDepartamentoItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -276,99 +359,99 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(BtnLimpiar)
+                        .addGap(18, 18, 18)
+                        .addComponent(BtnGrabar)
+                        .addGap(18, 18, 18)
+                        .addComponent(BtnEliminar)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4)
+                            .addComponent(TXTnombre, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                            .addComponent(jLabel7)
+                            .addComponent(TXTnif)
+                            .addComponent(jLabel2)
+                            .addComponent(TXTid)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel8)
+                            .addComponent(TXTtelefono)
+                            .addComponent(TXTcelular)
+                            .addComponent(jLabel10)
+                            .addComponent(TXTcorreo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(TXTid, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
-                                .addGap(52, 52, 52)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(TXTcelular)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(TXTdireccion, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                                .addComponent(TXTubigeo1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(BtnUbigeo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(TXTnombre, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addGap(52, 52, 52)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel10)
-                                            .addComponent(TXTcorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(CMBestado, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel9)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addComponent(jLabel4)
-                                                    .addGap(251, 251, 251))
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addComponent(TXTnif)
-                                                    .addGap(52, 52, 52)))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel3)
-                                                .addGap(279, 279, 279)))
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel8)
-                                            .addComponent(TXTtelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 65, Short.MAX_VALUE)))
-                        .addGap(16, 16, 16))))
+                            .addComponent(jLabel6)
+                            .addComponent(TXTdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(CMBestado, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(TXTubigeo1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12)
+                            .addComponent(CmbDistrito, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
+                            .addComponent(CmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13)
+                            .addComponent(CmbDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addGap(90, 90, 90))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(16, 16, 16)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(TXTcelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TXTid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TXTid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CmbDepartamento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TXTtelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TXTnif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(TXTnif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CmbProvincia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                    .addComponent(jLabel5))
+                .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TXTnombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TXTcorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(TXTubigeo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BtnUbigeo)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(CMBestado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addComponent(TXTdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(CmbDistrito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TXTcelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TXTubigeo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TXTtelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CMBestado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TXTcorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(TXTdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BtnGrabar)
+                    .addComponent(BtnEliminar)
+                    .addComponent(BtnLimpiar))
+                .addContainerGap())
         );
 
         TXTbuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -389,30 +472,22 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(BtnGrabar)
-                .addGap(74, 74, 74)
-                .addComponent(BtnEliminar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(BtnLimpiar)
-                .addGap(70, 70, 70)
-                .addComponent(BtnSalir)
-                .addGap(62, 62, 62))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel11)
-                        .addGap(44, 44, 44)
-                        .addComponent(TXTbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 468, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 598, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel11)
+                                    .addGap(44, 44, 44)
+                                    .addComponent(TXTbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(99, 99, 99)))
+                            .addComponent(jScrollPane1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(258, 258, 258)
+                        .addComponent(BtnSalir)))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -422,15 +497,11 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TXTbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtnGrabar)
-                    .addComponent(BtnEliminar)
-                    .addComponent(BtnLimpiar)
-                    .addComponent(BtnSalir))
-                .addGap(29, 29, 29))
+                .addGap(27, 27, 27)
+                .addComponent(BtnSalir)
+                .addGap(31, 31, 31))
         );
 
         pack();
@@ -529,15 +600,6 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_BtnEliminarActionPerformed
 
-    private void BtnUbigeoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnUbigeoActionPerformed
-        Ubigeo U;
-        JDUbigeo dialog = new JDUbigeo(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-        U = dialog.devUbigeo();
-
-        this.TXTubigeo1.setText(String.valueOf(U.getIdUbigeo()));
-    }//GEN-LAST:event_BtnUbigeoActionPerformed
-
     private void TXTcorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTcorreoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TXTcorreoActionPerformed
@@ -569,6 +631,36 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
     private void TXTidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TXTidActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_TXTidActionPerformed
+
+    private void CmbProvinciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbProvinciaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CmbProvinciaActionPerformed
+
+    private void CmbDistritoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CmbDistritoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CmbDistritoActionPerformed
+
+    private void CMBestadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CMBestadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_CMBestadoActionPerformed
+
+    private void CmbDistritoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CmbDistritoItemStateChanged
+     TXTubigeo1.setText(ubigeoDAO.getUbigeoByDeptProvDist(CmbDepartamento.getSelectedItem().toString(), CmbProvincia.getSelectedItem().toString(), CmbDistrito.getSelectedItem().toString()));
+    }//GEN-LAST:event_CmbDistritoItemStateChanged
+
+    private void CmbProvinciaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CmbProvinciaItemStateChanged
+    boxDisc = ubigeoDAO.llenarcomboDist(((String) boxProv.getSelectedItem()));
+        CmbDistrito.setModel(boxDisc);
+        TXTubigeo1.setText(ubigeoDAO.getUbigeoByDeptProvDist(CmbDepartamento.getSelectedItem().toString(), CmbProvincia.getSelectedItem().toString(), CmbDistrito.getSelectedItem().toString()));
+    }//GEN-LAST:event_CmbProvinciaItemStateChanged
+
+    private void CmbDepartamentoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_CmbDepartamentoItemStateChanged
+     boxProv = ubigeoDAO.llenarcomboProv((String) boxDep.getSelectedItem());
+        CmbProvincia.setModel(boxProv);
+        boxDisc = ubigeoDAO.llenarcomboDist((String) boxProv.getSelectedItem());
+        CmbDistrito.setModel(boxDisc);
+        TXTubigeo1.setText(ubigeoDAO.getUbigeoByDeptProvDist(CmbDepartamento.getSelectedItem().toString(), CmbProvincia.getSelectedItem().toString(), CmbDistrito.getSelectedItem().toString()));
+    }//GEN-LAST:event_CmbDepartamentoItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -611,8 +703,10 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
     private javax.swing.JButton BtnGrabar;
     private javax.swing.JButton BtnLimpiar;
     private javax.swing.JButton BtnSalir;
-    private javax.swing.JButton BtnUbigeo;
     private javax.swing.JComboBox<String> CMBestado;
+    private javax.swing.JComboBox<String> CmbDepartamento;
+    private javax.swing.JComboBox<String> CmbDistrito;
+    private javax.swing.JComboBox<String> CmbProvincia;
     private javax.swing.JTable TBLproveedores;
     private javax.swing.JTextField TXTbuscar;
     private javax.swing.JTextField TXTcelular;
@@ -625,6 +719,9 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
     private javax.swing.JTextField TXTubigeo1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
