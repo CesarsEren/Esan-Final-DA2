@@ -11,6 +11,9 @@ import DAO.CategoriaDAO;
 import DAO.DetCompraDAO;
 import DAO.TipoComprobanteDAO;
 import UI.SelProducto;
+import UTIL.EmailOnlyDocument;
+import UTIL.NumberOnlyDocument;
+import UTIL.TextOnlyDocument;
 import UTIL.Util;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -248,12 +251,13 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
                     .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarProd))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCatProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel13)
-                    .addComponent(txtImporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Totalizar))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtCatProd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel15)
+                        .addComponent(txtImporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Totalizar)))
                 .addGap(26, 26, 26)
                 .addComponent(BtnAgregar)
                 .addGap(15, 15, 15))
@@ -293,6 +297,7 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
 
         txtIGV.setEnabled(false);
 
+        txtTotal.setEnabled(false);
         txtTotal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTotalActionPerformed(evt);
@@ -803,7 +808,13 @@ public class InFrmCompra extends javax.swing.JInternalFrame {
         this.limpiaProducto();
         dtm1.setRowCount(0);
     }//GEN-LAST:event_LimpiarBTNActionPerformed
-
+    public void default_validaciones() {
+        txtCorrelativo.setDocument(new NumberOnlyDocument(11));
+        txtCantProd.setDocument(new NumberOnlyDocument(3));
+        txtSerie.setDocument(new NumberOnlyDocument(3));
+        txtDescuentoProd.setDocument(new NumberOnlyDocument(2));
+        jTextField1.setDocument(new TextOnlyDocument(20));
+    }
     private void GrabarBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrabarBTNActionPerformed
     guardarCompraEnBaseDeDatos();
     }//GEN-LAST:event_GrabarBTNActionPerformed
