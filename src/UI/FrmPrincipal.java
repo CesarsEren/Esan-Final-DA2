@@ -19,12 +19,17 @@ public class FrmPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form FrmPrincipal
      */
+    public static int ID_USUARIO_SESION;
+    public static String DATA_USUARIO_SESION;
+    public static String DATA_SQL;
+
     public FrmPrincipal() {
         initComponents();
         centerFrameOnScreen(this);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.lbluser.setText(DATA_USUARIO_SESION);
     }
-
+    
     private static void centerFrameOnScreen(JFrame frame) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int centerX = (int) (screenSize.getWidth() - frame.getWidth()) / 2;
@@ -43,8 +48,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         desktop = new javax.swing.JDesktopPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblserver = new javax.swing.JLabel();
+        lbluser = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -61,6 +66,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem14 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,15 +85,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
             .addGap(0, 425, Short.MAX_VALUE)
         );
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Microsoft SQL Server.png"))); // NOI18N
-        jLabel2.setText("localhost:1433");
-        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+        lblserver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Microsoft SQL Server.png"))); // NOI18N
+        lblserver.setText("localhost:1433");
+        lblserver.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel2MouseClicked(evt);
+                lblserverMouseClicked(evt);
             }
         });
 
-        jLabel3.setText("Administrador / Usuario");
+        lbluser.setText("Administrador / Usuario");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -93,9 +101,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jLabel2)
+                .addComponent(lblserver)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
+                .addComponent(lbluser)
                 .addGap(14, 14, 14))
         );
         jPanel1Layout.setVerticalGroup(
@@ -103,8 +111,8 @@ public class FrmPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                    .addComponent(lblserver)
+                    .addComponent(lbluser))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -178,7 +186,17 @@ public class FrmPrincipal extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem11);
 
+        jMenuItem13.setText("Ventas por Trabajador");
+        jMenu1.add(jMenuItem13);
+
         jMenuBar1.add(jMenu1);
+
+        jMenu4.setText("Herramientas");
+
+        jMenuItem14.setText("Correo");
+        jMenu4.add(jMenuItem14);
+
+        jMenuBar1.add(jMenu4);
 
         setJMenuBar(jMenuBar1);
 
@@ -212,10 +230,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
         frmTrabajador.setLocation(200, 100);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+    private void lblserverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblserverMouseClicked
         // TODO add your handling code here:
         new FrmConfig().setVisible(true);
-    }//GEN-LAST:event_jLabel2MouseClicked
+    }//GEN-LAST:event_lblserverMouseClicked
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
         // TODO add your handling code here: 
@@ -228,16 +246,17 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -247,5 +266,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
+    public static javax.swing.JLabel lblserver;
+    private javax.swing.JLabel lbluser;
     // End of variables declaration//GEN-END:variables
 }

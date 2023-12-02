@@ -17,4 +17,8 @@ public interface UbigeoUtilDAO {
     public DefaultComboBoxModel llenarcomboProv(String dep);
 
     public DefaultComboBoxModel llenarcomboDist(String prov);
+
+    public String getUbigeoByDeptProvDist(String... dt);
+
+    public Object[][] getRowByIdUbigeo(String idUbigeo);
 }
