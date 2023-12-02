@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c51a3e74-c189-4ccb-8184-ebb834e94d3b">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.9487171000000014"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
@@ -32,12 +32,19 @@ on us.idTrabajador = tr.idTrabajador]]>
 				<frame>
 					<reportElement mode="Opaque" x="0" y="7" width="555" height="24" forecolor="#B89F7D" backcolor="#000000" uuid="3f7f16bc-d789-4210-9315-4dcb20b75b61"/>
 					<textField isStretchWithOverflow="true">
-						<reportElement style="SubTitle" isPrintRepeatedValues="false" x="2" y="0" width="479" height="24" forecolor="#FFFFFF" uuid="8d313c85-b86d-4ddb-91af-3653433c52d5"/>
+						<reportElement style="SubTitle" isPrintRepeatedValues="false" x="2" y="0" width="431" height="24" forecolor="#FFFFFF" uuid="8d313c85-b86d-4ddb-91af-3653433c52d5"/>
 						<textElement>
 							<font isBold="false"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{vendedor}]]></textFieldExpression>
 					</textField>
+					<staticText>
+						<reportElement style="Column header" x="444" y="0" width="109" height="24" forecolor="#FFFFFF" uuid="a2dc76ff-82fd-4c7a-a938-64f3fb1469f9"/>
+						<textElement>
+							<font size="18" isBold="false"/>
+						</textElement>
+						<text><![CDATA[Total]]></text>
+					</staticText>
 				</frame>
 			</band>
 		</groupHeader>
@@ -48,13 +55,34 @@ on us.idTrabajador = tr.idTrabajador]]>
 	<group name="fechReg">
 		<groupExpression><![CDATA[$F{fechReg}]]></groupExpression>
 		<groupHeader>
-			<band height="30">
-				<textField>
-					<reportElement positionType="Float" x="0" y="4" width="555" height="26" forecolor="#000000" uuid="988fde8f-2170-4c9b-8ab0-171fae5c5357"/>
+			<band height="26">
+				<textField pattern="yyyy-MM-dd">
+					<reportElement positionType="Float" x="157" y="0" width="90" height="26" forecolor="#000000" uuid="988fde8f-2170-4c9b-8ab0-171fae5c5357"/>
 					<textElement>
 						<font fontName="Times New Roman" size="16" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fechReg}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="297" y="0" width="109" height="26" uuid="fa9e9ab4-0ef4-4a31-863f-48079c4376b2"/>
+					<textElement>
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{impuesto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="444" y="0" width="109" height="26" uuid="89ff6489-2601-43c3-9ed7-1a3cea009ec0"/>
+					<textElement>
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement positionType="Float" x="2" y="0" width="90" height="26" forecolor="#000000" uuid="0605065a-8531-4651-a1ac-2c0783fc4186"/>
+					<textElement>
+						<font fontName="Times New Roman" size="16" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Doc}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -70,10 +98,6 @@ on us.idTrabajador = tr.idTrabajador]]>
 	</background>
 	<title>
 		<band height="132" splitType="Stretch">
-			<image>
-				<reportElement x="456" y="0" width="99" height="132" uuid="6b5e6735-d1ef-4c4e-9964-6fe6b2bed423"/>
-				<imageExpression><![CDATA["cherry.jpg"]]></imageExpression>
-			</image>
 			<frame>
 				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" backcolor="#000000" uuid="6cb9e2d8-7e8c-4f96-83c0-76d05374ac33"/>
 				<staticText>
@@ -88,7 +112,7 @@ on us.idTrabajador = tr.idTrabajador]]>
 					<textElement>
 						<font size="22" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Por Vendedor]]></text>
+					<text><![CDATA[Por Trabajador]]></text>
 				</staticText>
 			</frame>
 			<frame>
@@ -101,6 +125,10 @@ on us.idTrabajador = tr.idTrabajador]]>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
+			<image>
+				<reportElement x="453" y="0" width="102" height="132" uuid="4381358c-3477-42cc-af13-c80e03411d7f"/>
+				<imageExpression><![CDATA["C:\\Users\\xhesm\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoFinal\\config\\reports\\cherry.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -109,11 +137,25 @@ on us.idTrabajador = tr.idTrabajador]]>
 	<columnHeader>
 		<band height="26" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="0" y="7" width="555" height="18" forecolor="#000000" uuid="a2dc76ff-82fd-4c7a-a938-64f3fb1469f9"/>
+				<reportElement style="Column header" x="297" y="2" width="109" height="24" forecolor="#000000" uuid="ee0d8095-c97a-4f12-a688-7e842653e8d6"/>
 				<textElement>
-					<font isBold="false"/>
+					<font size="18" isBold="false"/>
 				</textElement>
-				<text><![CDATA[impuesto]]></text>
+				<text><![CDATA[Impuesto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="145" y="2" width="124" height="24" forecolor="#000000" uuid="2ec6e7a6-a2c3-49cd-8f59-174808656b7a"/>
+				<textElement>
+					<font size="18" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Registro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="2" y="0" width="124" height="24" forecolor="#000000" uuid="2401b8fc-4c49-452d-8344-92663ae46b21"/>
+				<textElement>
+					<font size="18" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Serie-Nro]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -121,13 +163,6 @@ on us.idTrabajador = tr.idTrabajador]]>
 		<band height="18" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="157ea234-2fd2-4311-a0c9-0ff9cf9fa2b9"/>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="0" y="0" width="555" height="18" uuid="fa9e9ab4-0ef4-4a31-863f-48079c4376b2"/>
-					<textElement>
-						<font size="14"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{impuesto}]]></textFieldExpression>
-				</textField>
 			</frame>
 		</band>
 	</detail>

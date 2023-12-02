@@ -782,8 +782,6 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
     private void cboDistritoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboDistritoItemStateChanged
         // TODO add your handling code here:
         txtUbigeo.setText(ubigeoDAO.getUbigeoByDeptProvDist(cboDepa.getSelectedItem().toString(), cboProv.getSelectedItem().toString(), cboDistrito.getSelectedItem().toString()));
-
-
     }//GEN-LAST:event_cboDistritoItemStateChanged
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

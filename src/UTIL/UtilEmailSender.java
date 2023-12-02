@@ -22,131 +22,104 @@ import javax.activation.FileDataSource;
  */
 public class UtilEmailSender {
 
-    public static void main11(String[] args) {
-        // Recipient's email ID needs to be mentioned.
-        String to = "pruebacesars@yopmail.com";
+    private String correo_receptor;
+    private List<String> paths;
+    private String asunto;
+    private String contenido;
 
-        // Sender's email ID needs to be mentioned
-        String from = "cesarsdev@gmail.com";
-
-        // Assuming you are sending email from localhost
-        String host = "smtp.gmail.com";
-        String password = "rvyyonirqweynqxq";
-        // Get system properties
-        Properties properties = System.getProperties();
- 
-
-        // Setup mail server
-        //properties.setProperty("mail.smtp.host", host);
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.debug", "true");
-
-        // Get the default Session object.
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() { 
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() { 
-                return new PasswordAuthentication(from, password); 
-            }
-
-        });
-        //getDefaultInstance(properties);
-
+    public boolean enviarInformePorCorreo() throws MessagingException {
         try {
-            // Create a default MimeMessage object.
-            MimeMessage message = new MimeMessage(session);
+            // Configuración de las propiedades para la conexión con el servidor de correo
 
-            // Set From: header field of the header.
+            String from = "cesarsdev@gmail.com";
+            String host = "smtp.gmail.com";
+            String password = "rvyyonirqweynqxq";
+            // Get system properties
+            Properties properties = System.getProperties();
+
+            // Setup mail server
+            //properties.setProperty("mail.smtp.host", host);
+            properties.put("mail.smtp.host", host);
+            properties.put("mail.smtp.port", "465");
+            properties.put("mail.smtp.ssl.enable", "true");
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.debug", "false");
+
+            // Crear una sesión de correo
+            Session session = Session.getInstance(properties, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    // Aquí debes colocar tu dirección de correo electrónico y tu contraseña
+                    return new PasswordAuthentication(from, password);
+                }
+            });
+
+            // Crear un mensaje de correo
+            Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.getCorreo_receptor()));
+            message.setSubject(this.getAsunto());
 
-            // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            // Crear el cuerpo del mensaje
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText(this.getContenido());
 
-            // Set Subject: header field
-            message.setSubject("This is the Subject Line!");
+            // Crear el informe como archivo adjunto
+            for (String filePath : getPaths()) {
+                MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+                //String filePath = "config/temporal-reports/informe.pdf";  // Reemplaza con la ruta real de tu informe
+                DataSource source = new FileDataSource(filePath);
+                attachmentBodyPart.setDataHandler(new DataHandler(source));
+                String name = filePath.substring(filePath.lastIndexOf("/"));
+                attachmentBodyPart.setFileName(name);
+                // Combinar el cuerpo del mensaje y el archivo adjunto
+                Multipart multipart = new MimeMultipart();
+                multipart.addBodyPart(messageBodyPart);
+                multipart.addBodyPart(attachmentBodyPart);
 
-            // Now set the actual message
-            message.setText("This is actual message");
-
-            // Send message
+                // Configurar el mensaje con el contenido combinado
+                message.setContent(multipart);
+            }
+            // Enviar el mensaje
             Transport.send(message);
-            System.out.println("Sent message successfully....");
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
+            return true;
+            //System.out.println("Informe enviado por correo electrónico exitosamente.");
+        } catch (MessagingException ex) {
+            return false;
+            //   Logger.getLogger(UtilEmailSender.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    /*
-    public static void main(String[] args) {
-        try {
-            enviarInformePorCorreo();
-        } catch (MessagingException ex) {
-            Logger.getLogger(UtilEmailSender.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JRException ex) {
-            Logger.getLogger(UtilEmailSender.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
+    public String getCorreo_receptor() {
+        return correo_receptor;
+    }
 
-    private static void enviarInformePorCorreo() throws MessagingException, JRException {
-        // Configuración de las propiedades para la conexión con el servidor de correo
+    public void setCorreo_receptor(String correo_receptor) {
+        this.correo_receptor = correo_receptor;
+    }
 
-        // Sender's email ID needs to be mentioned
-        String from = "cesarsdev@gmail.com";
+    public List<String> getPaths() {
+        return paths;
+    }
 
-        // Assuming you are sending email from localhost
-        String host = "smtp.gmail.com";
-        String password = "rvyyonirqweynqxq";
-        // Get system properties
-        Properties properties = System.getProperties(); 
+    public void setPaths(List<String> paths) {
+        this.paths = paths;
+    }
 
-        // Setup mail server
-        //properties.setProperty("mail.smtp.host", host);
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.debug", "true");
+    public String getAsunto() {
+        return asunto;
+    }
 
-        // Crear una sesión de correo
-        Session session = Session.getInstance(properties, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                // Aquí debes colocar tu dirección de correo electrónico y tu contraseña
-                return new PasswordAuthentication(from, password);
-            }
-        });
+    public void setAsunto(String asunto) {
+        this.asunto = asunto;
+    }
 
-        // Crear un mensaje de correo
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(from));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("23100201@ue.edu.pe"));
-        message.setSubject("Informe JasperReports adjunto");
+    public String getContenido() {
+        return contenido;
+    }
 
-        // Crear el cuerpo del mensaje
-        BodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setText("Adjunto encontrarás el informe generado con JasperReports.");
-
-        // Crear el informe como archivo adjunto
-        MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-        String filePath = "config/temporal-reports/informe.pdf";  // Reemplaza con la ruta real de tu informe
-        DataSource source = new FileDataSource(filePath);
-        attachmentBodyPart.setDataHandler(new DataHandler(source));
-        attachmentBodyPart.setFileName("Informe.jasper.pdf");
-
-        // Combinar el cuerpo del mensaje y el archivo adjunto
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(messageBodyPart);
-        multipart.addBodyPart(attachmentBodyPart);
-
-        // Configurar el mensaje con el contenido combinado
-        message.setContent(multipart);
-
-        // Enviar el mensaje
-        Transport.send(message);
-
-        System.out.println("Informe enviado por correo electrónico exitosamente.");
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
     }
 
 }

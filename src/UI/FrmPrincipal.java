@@ -4,11 +4,29 @@
  */
 package UI;
 
+import DAO.Impl.TrabajadorDAOImpl;
+import DAO.Impl.UtilComprasDAOImpl;
+import DAO.Impl.UtilVentasDAOImpl;
+import DAO.UtilComprasDAO;
+import DAO.UtilVentasDAO;
+import UI.internal.InFrmCorreo;
 import UI.internal.InFrmTienda;
 import UI.internal.InFrmTrabajador;
+import UI.internal.InFrmVenta;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -23,13 +41,16 @@ public class FrmPrincipal extends javax.swing.JFrame {
     public static String DATA_USUARIO_SESION;
     public static String DATA_SQL;
 
+    UtilComprasDAO comprasDAO = new UtilComprasDAOImpl();
+    UtilVentasDAO ventasDAO = new UtilVentasDAOImpl();
+
     public FrmPrincipal() {
         initComponents();
         centerFrameOnScreen(this);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.lbluser.setText(DATA_USUARIO_SESION);
     }
-    
+
     private static void centerFrameOnScreen(JFrame frame) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int centerX = (int) (screenSize.getWidth() - frame.getWidth()) / 2;
@@ -63,9 +84,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
-        jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem14 = new javax.swing.JMenuItem();
@@ -124,6 +143,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jMenuItem8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Checkout.png"))); // NOI18N
         jMenuItem8.setText("Venta");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem8);
 
         jMenuBar1.add(jMenu3);
@@ -172,28 +196,35 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jMenu1.setText("Reportes");
 
-        jMenuItem9.setText("Ventas Diarias");
-        jMenu1.add(jMenuItem9);
-
+        jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Document.png"))); // NOI18N
         jMenuItem10.setText("Compras");
-        jMenu1.add(jMenuItem10);
-
-        jMenuItem11.setText("Stock");
-        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem11ActionPerformed(evt);
+                jMenuItem10ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem11);
+        jMenu1.add(jMenuItem10);
 
+        jMenuItem13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Business Report.png"))); // NOI18N
         jMenuItem13.setText("Ventas por Trabajador");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem13);
 
         jMenuBar1.add(jMenu1);
 
         jMenu4.setText("Herramientas");
 
+        jMenuItem14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Letter.png"))); // NOI18N
         jMenuItem14.setText("Correo");
+        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem14ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem14);
 
         jMenuBar1.add(jMenu4);
@@ -218,10 +249,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem11ActionPerformed
-
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
         InFrmTrabajador frmTrabajador = new InFrmTrabajador();
@@ -243,6 +270,33 @@ public class FrmPrincipal extends javax.swing.JFrame {
         frmTienda.setLocation(200, 100);
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        // TODO add your handling code here: 
+        comprasDAO.ImprimirReporte();
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        // TODO add your handling code here:
+        ventasDAO.ImprimirReporte();
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+        // TODO add your handling code here: 
+        InFrmCorreo frmCorreo = new InFrmCorreo();
+        desktop.add(frmCorreo);
+        frmCorreo.setVisible(true);
+        frmCorreo.setLocation(200, 100);
+    }//GEN-LAST:event_jMenuItem14ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+        InFrmVenta frmVenta = new InFrmVenta();
+        desktop.add(frmVenta);
+        frmVenta.setVisible(true);
+        frmVenta.setLocation(200, 100);
+
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop;
@@ -253,7 +307,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem14;
@@ -264,7 +317,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     public static javax.swing.JLabel lblserver;
     private javax.swing.JLabel lbluser;
