@@ -25,9 +25,9 @@ public class UbigeoUtilDAOImpl extends Conexion implements UbigeoUtilDAO {
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
         try {
             ResultSet resultSet = EjecutarSQL("Select distinct(dept) as dept from Ubigeo");
-            Object[][] ob = new Object[resultSet.getRow()][resultSet.getMetaData().getColumnCount()];
-            int i = 0;
-            int j = 0;
+//            Object[][] ob = new Object[resultSet.getRow()][resultSet.getMetaData().getColumnCount()];
+            //  int i = 0;
+            //  int j = 0;
             while (resultSet.next()) {
                 //ComboData cd = new ComboData(0, resultSet.getString(1).trim());
                 modelo.addElement(resultSet.getString(1).trim());
@@ -43,9 +43,9 @@ public class UbigeoUtilDAOImpl extends Conexion implements UbigeoUtilDAO {
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
         try {
             ResultSet resultSet = EjecutarSQL("Select distinct(prov) as dept from Ubigeo where dept = '" + dep + "'");
-            Object[][] ob = new Object[resultSet.getRow()][resultSet.getMetaData().getColumnCount()];
-            int i = 0;
-            int j = 0;
+            //Object[][] ob = new Object[resultSet.getRow()][resultSet.getMetaData().getColumnCount()];
+            // int i = 0;
+            //  int j = 0;
             while (resultSet.next()) {
                 modelo.addElement(resultSet.getString(1).trim());
             }
@@ -60,9 +60,9 @@ public class UbigeoUtilDAOImpl extends Conexion implements UbigeoUtilDAO {
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
         try {
             ResultSet resultSet = EjecutarSQL("Select distinct(dist) as dept from Ubigeo where prov = '" + prov + "'");
-            Object[][] ob = new Object[resultSet.getRow()][resultSet.getMetaData().getColumnCount()];
-            int i = 0;
-            int j = 0;
+            //  Object[][] ob = new Object[resultSet.getRow()][resultSet.getMetaData().getColumnCount()];
+            //   int i = 0;
+            //   int j = 0;
             while (resultSet.next()) {
                 modelo.addElement(resultSet.getString(1).trim());
             }

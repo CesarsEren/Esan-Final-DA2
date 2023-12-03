@@ -10,7 +10,9 @@ import DAO.Impl.UtilVentasDAOImpl;
 import DAO.UtilComprasDAO;
 import DAO.UtilVentasDAO;
 import UI.internal.InFrmCliente;
+import UI.internal.InFrmCompra;
 import UI.internal.InFrmCorreo;
+import UI.internal.InFrmProveedor;
 import UI.internal.InFrmTienda;
 import UI.internal.InFrmTrabajador;
 import UI.internal.InFrmVenta;
@@ -200,6 +202,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         mncompra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Return Purchase.png"))); // NOI18N
         mncompra.setText("Compra");
+        mncompra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mncompraActionPerformed(evt);
+            }
+        });
         jMenu3.add(mncompra);
 
         mnventa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Checkout.png"))); // NOI18N
@@ -217,6 +224,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         mnproveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/Escrow Process.png"))); // NOI18N
         mnproveedor.setText("Proveedor");
+        mnproveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnproveedorActionPerformed(evt);
+            }
+        });
         jMenu2.add(mnproveedor);
 
         mncliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ICONS/User Male_1.png"))); // NOI18N
@@ -371,6 +383,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
         frmCliente.setVisible(true);
         frmCliente.setLocation(200, 100);
     }//GEN-LAST:event_mnclienteActionPerformed
+
+    private void mnproveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnproveedorActionPerformed
+        // TODO add your handling code here:
+        InFrmProveedor frmProveedor = new InFrmProveedor();
+        desktop.add(frmProveedor);
+        frmProveedor.setVisible(true);
+        frmProveedor.setLocation(200, 100);
+    }//GEN-LAST:event_mnproveedorActionPerformed
+
+    private void mncompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mncompraActionPerformed
+        // TODO add your handling code here:
+        InFrmCompra frmCompra = new InFrmCompra();
+        desktop.add(frmCompra);
+        frmCompra.setVisible(true);
+        frmCompra.setLocation(200, 100);
+    }//GEN-LAST:event_mncompraActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

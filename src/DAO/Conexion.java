@@ -430,4 +430,24 @@ public class Conexion {
             System.out.println(ex);
         }
     }
+
+    public ResultSet resultadoSQL(String sql) throws SQLException {
+        Statement s = Conexion.dbCon.createStatement();
+        ResultSet r = s.executeQuery(sql);
+        if (r == null) {
+            return null;
+        } else {
+            return r;
+        }
+    }
+
+    public int ejecutaSQL(String sql) throws SQLException {
+        Statement s = Conexion.dbCon.createStatement();
+        int r = s.executeUpdate(sql);
+        if (r == 0) {
+            return 0;
+        } else {
+            return r;
+        }
+    }
 }

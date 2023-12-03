@@ -8,6 +8,8 @@ import BEAN.Trabajador;
 import DAO.Conexion;
 import DAO.TrabajadorDAO;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -127,14 +129,21 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
     @Override
     public boolean eliminar(int id_trabajador) {
-        boolean rs = false;
-        Object[][] slc = select("Usuario", "count(idUsuario) as cantidad", "idTrabajador=" + id_trabajador);
-        rs = Integer.parseInt(slc[0][0] + "") > 0;
-
-        if (!rs) {
-            rs = delete("Trabajador", "idCliente" + id_trabajador);
+        boolean res = false;
+        try {
+            ResultSet rs = EjecutarSQL("select count(idUsuario) as cantidad from Usuario where idTrabajador = " + id_trabajador);
+            int size = 0;
+            if (rs.next()) {
+                size = rs.getInt(1);
+            }
+            // rs = Integer.parseInt(slc[0][0] + "") > 0;
+            if (size == 0) {
+                res = delete("Trabajador", "idTrabajador=" + id_trabajador);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TrabajadorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return rs;
+        return res;
     }
 
 }

@@ -33,7 +33,7 @@ from Cliente]]>
 	<title>
 		<band height="132" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" backcolor="#000000" uuid="c41a519f-6bfb-4062-aa27-a1d360b8d093"/>
+				<reportElement mode="Opaque" x="0" y="0" width="553" height="95" backcolor="#000000" uuid="c41a519f-6bfb-4062-aa27-a1d360b8d093"/>
 				<staticText>
 					<reportElement style="Title" x="0" y="0" width="370" height="66" uuid="163f8635-b203-42c7-8b03-041db6e6a06b"/>
 					<textElement>
@@ -42,7 +42,7 @@ from Cliente]]>
 					<text><![CDATA[Clientes]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="SubTitle" x="157" y="66" width="249" height="29" uuid="56ccb6b6-ba27-4ab3-8d93-db968ab9d37b"/>
+					<reportElement style="SubTitle" x="304" y="66" width="249" height="29" uuid="56ccb6b6-ba27-4ab3-8d93-db968ab9d37b"/>
 					<textElement>
 						<font size="22" isBold="false"/>
 					</textElement>
@@ -50,19 +50,15 @@ from Cliente]]>
 				</staticText>
 			</frame>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="100" width="451" height="32" forecolor="#000000" backcolor="#CC0000" uuid="849ca46d-df73-4af5-a794-519340fba5bf"/>
+				<reportElement mode="Opaque" x="0" y="100" width="555" height="32" forecolor="#000000" backcolor="#CC0000" uuid="849ca46d-df73-4af5-a794-519340fba5bf"/>
 				<textField pattern="EEEEE dd MMMMM yyyy">
-					<reportElement x="307" y="12" width="144" height="20" forecolor="#FFFFFF" uuid="8f88b99b-c86f-4216-bb05-2f8c68522100"/>
+					<reportElement x="409" y="12" width="144" height="20" forecolor="#FFFFFF" uuid="8f88b99b-c86f-4216-bb05-2f8c68522100"/>
 					<textElement textAlignment="Right">
 						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
-			<image>
-				<reportElement x="453" y="0" width="102" height="132" uuid="54d05bd5-3628-4cce-bca7-0b7f113f71a4"/>
-				<imageExpression><![CDATA["C:\\Users\\xhesm\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoFinal\\config\\reports\\cherry.jpg"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>

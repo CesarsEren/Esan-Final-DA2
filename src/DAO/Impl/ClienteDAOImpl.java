@@ -8,6 +8,8 @@ import BEAN.Cliente;
 import BEAN.Trabajador;
 import DAO.ClienteDAO;
 import DAO.Conexion;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -101,14 +103,23 @@ public class ClienteDAOImpl extends Conexion implements ClienteDAO {
 
     @Override
     public boolean eliminar(int id_cliente) {
-        boolean rs = false;
-        Object[][] slc = select("CabVenta", "count(idVenta) as cantidad", "idCliente=" + id_cliente);
-        rs = Integer.parseInt(slc[0][0] + "") > 0;
+        // Object[][] slc = select("CabVenta", "count(idVenta) as cantidad", "idCliente=" + id_cliente);
+        // rs = Integer.parseInt(slc[0][0] + "") > 0;
 
-        if (!rs) {
-            rs = delete("Cliente", "idCliente" + id_cliente);
+        boolean res = false;
+        try {
+            ResultSet rs = EjecutarSQL("select count(idVenta) as cantidad from CabVenta where idCliente = " + id_cliente);
+            int size = 0;
+            if (rs.next()) {
+                size = rs.getInt(1);
+            }
+            if (size == 0) {
+                res = delete("Cliente", "idCliente=" + id_cliente);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getLocalizedMessage());
         }
-        return rs;
+        return res;
     }
 
 }

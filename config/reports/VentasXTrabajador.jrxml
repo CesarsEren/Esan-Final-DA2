@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c51a3e74-c189-4ccb-8184-ebb834e94d3b">
-	<property name="ireport.zoom" value="1.9487171000000014"/>
+	<property name="ireport.zoom" value="1.4641000000000008"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
@@ -99,16 +99,16 @@ on us.idTrabajador = tr.idTrabajador]]>
 	<title>
 		<band height="132" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" backcolor="#000000" uuid="6cb9e2d8-7e8c-4f96-83c0-76d05374ac33"/>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="95" backcolor="#000000" uuid="6cb9e2d8-7e8c-4f96-83c0-76d05374ac33"/>
 				<staticText>
-					<reportElement style="Title" x="0" y="0" width="370" height="66" uuid="dc189b8d-911d-4a65-96e7-3b149891d500"/>
+					<reportElement style="Title" x="0" y="0" width="423" height="66" uuid="dc189b8d-911d-4a65-96e7-3b149891d500"/>
 					<textElement>
 						<font isBold="false"/>
 					</textElement>
 					<text><![CDATA[Ventas]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="SubTitle" x="157" y="66" width="249" height="29" uuid="df430be4-bc91-4013-93e1-0db3ca249b26"/>
+					<reportElement style="SubTitle" x="306" y="66" width="249" height="29" uuid="df430be4-bc91-4013-93e1-0db3ca249b26"/>
 					<textElement>
 						<font size="22" isBold="false"/>
 					</textElement>
@@ -116,7 +116,7 @@ on us.idTrabajador = tr.idTrabajador]]>
 				</staticText>
 			</frame>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="100" width="451" height="32" forecolor="#000000" backcolor="#CC0000" uuid="df16413f-b02b-41b7-8a33-220bd4cfad52"/>
+				<reportElement mode="Opaque" x="0" y="100" width="553" height="32" forecolor="#000000" backcolor="#CC0000" uuid="df16413f-b02b-41b7-8a33-220bd4cfad52"/>
 				<textField pattern="EEEEE dd MMMMM yyyy">
 					<reportElement x="307" y="12" width="144" height="20" forecolor="#FFFFFF" uuid="62c5e71f-cc52-44f3-9678-9e0eca9b0205"/>
 					<textElement textAlignment="Right">
@@ -125,10 +125,6 @@ on us.idTrabajador = tr.idTrabajador]]>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
-			<image>
-				<reportElement x="453" y="0" width="102" height="132" uuid="4381358c-3477-42cc-af13-c80e03411d7f"/>
-				<imageExpression><![CDATA["C:\\Users\\xhesm\\OneDrive\\Documentos\\NetBeansProjects\\ProyectoFinal\\config\\reports\\cherry.jpg"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
