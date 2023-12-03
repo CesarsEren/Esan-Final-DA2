@@ -623,7 +623,7 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
                         if (opcion == JOptionPane.YES_OPTION) {
                             Map<String, Object> map = new HashMap<>();
                             map.put("id_venta", cabVenta.getIdVenta());
-                            map.put("SerieNro", cabVenta.getSerie() + "-" + cabVenta.getCorrelativo());
+                            map.put("SerieNro", "B" + cabVenta.getSerie() + "-" + cabVenta.getCorrelativo());
                             map.put("Nombres", txtCliDatos.getText());
                             map.put("dni", txtCliDoc.getText());
                             map.put("impuesto", lblImpuesto.getText());
@@ -862,6 +862,8 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
     private void textfields_config() {
         txtCant.setDocument(new NumberOnlyDocument(3));
         txtDesc.setDocument(new NumberOnlyDocumentSize(100));
+        txtSerie.setDocument(new NumberOnlyDocument(3));
+        txtNro.setDocument(new NumberOnlyDocument(4));
     }
 
     private void calcularImpuestoYTotal() {
