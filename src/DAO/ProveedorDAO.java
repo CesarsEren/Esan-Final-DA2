@@ -104,18 +104,21 @@ public class ProveedorDAO {
         
         //verificar que no existan registros en tablas dependientes
         try{
-                sql= "select * from CabCompra where idProveedor = " + t.getIdProveedor();
-                ResultSet result = con.resultadoSQL(sql);
-                if(result.next()==true){
-                    sw=false;
-                }
-        }catch(java.sql.SQLException e){
-            e.printStackTrace();
-        }
+                    sql = "select * from CabCompra where idProveedor = " + t.getIdProveedor();
+    ResultSet result = con.resultadoSQL(sql);
+    if (result.next()) {
+        sw = false;
+        System.out.println("Dependencias encontradas para el proveedor con ID " + t.getIdProveedor());
+    } else {
+        System.out.println("No se encontraron dependencias para el proveedor con ID " + t.getIdProveedor());
+    }
+} catch (java.sql.SQLException e) {
+    e.printStackTrace();
+}
         
         //eliminar Proveedor
         try{
-                if(sw = true){
+                if(sw == true){
                     sql = "delete from Proveedor where idProveedor = " + t.getIdProveedor();
                     con.ejecutaSQL(sql);
                     }    

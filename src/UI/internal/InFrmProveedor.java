@@ -587,11 +587,12 @@ public class InFrmProveedor extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_BtnSalirActionPerformed
 
     private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
-     Proveedor t = new Proveedor();
+    
+        Proveedor t = new Proveedor();
         boolean sw;
         t.setIdProveedor(Integer.parseInt(this.TXTid.getText().toString()));
         sw = provDao.eliminaProveedor(t);
-        if(sw=true){
+        if(sw==true){
             JOptionPane.showMessageDialog(this, "Registro eliminado correctamente");
             this.limpia();
             this.llenaTblProveedor(false, "");
