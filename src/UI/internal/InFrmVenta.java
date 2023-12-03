@@ -19,6 +19,7 @@ import UTIL.NumberOnlyDocumentSize;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,9 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
      */
     UtilProductoDAO utilProductoDAO = new UtilProductoDAOImpl();
     DefaultTableModel model = new DefaultTableModel();
+    DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+
+//    
     DecimalFormat decimalFormat = new DecimalFormat("#0.00");
     UtilClienteDAO clienteDAO = new UtilClienteDAOImpl();
     UtilVentasDAO utilVentasDAO = new UtilVentasDAOImpl();
@@ -55,6 +59,8 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
         this.setTitle("VENTAS");
         default_Init();
         textfields_config();
+        simbolos.setDecimalSeparator('.');
+        decimalFormat = new DecimalFormat("#0.00", simbolos);
     }
 
     private void default_Init() {
@@ -585,7 +591,7 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
                 );
             } else {
                 Object[][] objs = utilVentasDAO.buscarSerieAndNumeroReply(txtSerie.getText().trim(), txtNro.getText().trim());
-                if (objs.length > 0) {
+                if (objs.length > 0 || Integer.parseInt(objs[0][0] + "") > 0) {
                     JOptionPane.showMessageDialog(this, "EL NRO DE SERIE Y CORRELATIVO YA EXISTEN , VUELVA A INTENTARLO CON OTROS");
                 } else {
                     CabVenta cabVenta = new CabVenta();
