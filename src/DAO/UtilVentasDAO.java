@@ -16,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public interface UtilVentasDAO {
 
-    public void ImprimirReporte();
+    public void ImprimirReporte(int id_trabajador);
 
     public void guardarReporte();
 
@@ -27,4 +27,6 @@ public interface UtilVentasDAO {
     public boolean guardarVenta(CabVenta cabVenta, List<DetVenta> lsDetVenta);
 
     public boolean buscarSerieAndNumeroReply(String serie, String correlativo);
+
+    public DefaultTableModel llenartablaBy(int idTrabajador);
 }

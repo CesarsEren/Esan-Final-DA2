@@ -146,4 +146,9 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
         return res;
     }
 
+    @Override
+    public Object[][] findTrabajadorByDNI(String dni) {
+        return select("Trabajador", "idTrabajador,docIdent,nombre", "docIdent=" + comillas(dni));
+    }
+
 }

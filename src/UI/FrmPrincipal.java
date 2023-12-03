@@ -16,6 +16,7 @@ import UI.internal.InFrmProveedor;
 import UI.internal.InFrmTienda;
 import UI.internal.InFrmTrabajador;
 import UI.internal.InFrmVenta;
+import UI.internal.InFrmVentasXTrabajador;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.HashMap;
@@ -355,7 +356,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void mnventasXtrabajadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnventasXtrabajadorActionPerformed
         // TODO add your handling code here:
-        ventasDAO.ImprimirReporte();
+
+        InFrmVentasXTrabajador frmVentasXTrabajador = new InFrmVentasXTrabajador();
+        desktop.add(frmVentasXTrabajador);
+        frmVentasXTrabajador.setVisible(true);
+        frmVentasXTrabajador.setLocation(200, 100);
+
+        // ventasDAO.ImprimirReporte(0);
     }//GEN-LAST:event_mnventasXtrabajadorActionPerformed
 
     private void mncorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mncorreoActionPerformed

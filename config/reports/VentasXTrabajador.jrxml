@@ -13,12 +13,19 @@
 			<style mode="Opaque" backcolor="#F0EFEF"/>
 		</conditionalStyle>
 	</style>
-	<queryString language="SQL">
-		<![CDATA[select tr.nombre+' '+tr.apePat+' '+tr.apeMat as vendedor,fechReg,serie+'-'+correlativo as Doc,impuesto,total from CabVenta cv
-inner join Usuario us
-on cv.idUsuarioReg = us.idUsuario
-inner join Trabajador tr
-on us.idTrabajador = tr.idTrabajador]]>
+	<parameter name="id_trabajador" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT tr.nombre + ' ' + tr.apePat + ' ' + tr.apeMat AS vendedor,
+       fechReg,
+       serie + '-' + correlativo AS Doc,
+       impuesto,
+       total
+FROM CabVenta cv
+INNER JOIN Usuario us ON cv.idUsuarioReg = us.idUsuario
+INNER JOIN Trabajador tr ON us.idTrabajador = tr.idTrabajador
+WHERE ($P{id_trabajador} = 0 OR tr.idTrabajador = $P{id_trabajador});]]>
 	</queryString>
 	<field name="vendedor" class="java.lang.String"/>
 	<field name="fechReg" class="java.sql.Timestamp"/>

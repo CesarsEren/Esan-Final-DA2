@@ -241,7 +241,6 @@ public class InFrmCorreo extends javax.swing.JInternalFrame {
             lblmssg.setText(ex.getLocalizedMessage());
             //Logger.getLogger(InFrmCorreo.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public boolean llenarError(JTextField... jTxtFields) {

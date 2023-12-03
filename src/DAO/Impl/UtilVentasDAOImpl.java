@@ -32,9 +32,10 @@ import net.sf.jasperreports.view.JasperViewer;
 public class UtilVentasDAOImpl extends Conexion implements UtilVentasDAO {
 
     @Override
-    public void ImprimirReporte() {
+    public void ImprimirReporte(int id_trabajador) {
         try {
             Map<String, Object> map = new HashMap<>();
+            map.put("id_trabajador", id_trabajador);
             JasperReport jasperReport = JasperCompileManager.compileReport("config/reports/VentasXTrabajador.jrxml");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, this.conectardb());
             JasperViewer.viewReport(jasperPrint, false);
@@ -57,13 +58,12 @@ public class UtilVentasDAOImpl extends Conexion implements UtilVentasDAO {
             Map<String, Object> map = new HashMap<>();
             JasperReport jasperReport = JasperCompileManager.compileReport("config/reports/VentasXTrabajador.jrxml");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, this.conectardb());
-            JasperViewer.viewReport(jasperPrint, false);
+            //JasperViewer.viewReport(jasperPrint, false);
             String pdfFile = "config/temporal-reports/VentasXTrabajador.pdf";
             JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFile);
         } catch (JRException ex) {
             Logger.getLogger(TrabajadorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     @Override
@@ -123,7 +123,7 @@ public class UtilVentasDAOImpl extends Conexion implements UtilVentasDAO {
 
     @Override
     public boolean buscarSerieAndNumeroReply(String serie, String correlativo) {
-    
+
         ResultSet resultSet = EjecutarSQL("select count(idVenta) as idVenta from CabVenta where serie=" + comillas(serie) + " and correlativo=" + comillas(correlativo));
         int count = 0;
         try {
@@ -134,6 +134,20 @@ public class UtilVentasDAOImpl extends Conexion implements UtilVentasDAO {
             Logger.getLogger(UtilVentasDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return count > 0;
+    }
+
+    @Override
+    public DefaultTableModel llenartablaBy(int idTrabajador) {
+
+        Object[][] select = null;
+        if (idTrabajador == 0) {
+            select = select("CabVenta cv inner join Usuario us on cv.idUsuarioReg = us.idUsuario inner join Trabajador tr on us.idTrabajador = tr.idTrabajador", "tr.nombre+' '+tr.apePat+' '+tr.apeMat as vendedor,fechReg,serie+'-'+correlativo as Doc,impuesto,total", null);
+        } else {
+            select = select("CabVenta cv inner join Usuario us on cv.idUsuarioReg = us.idUsuario inner join Trabajador tr on us.idTrabajador = tr.idTrabajador", "tr.nombre+' '+tr.apePat+' '+tr.apeMat as vendedor,fechReg,serie+'-'+correlativo as Doc,impuesto,total", "tr.idTrabajador = " + idTrabajador);
+        }
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.setDataVector(select, new Object[]{"Vendedor", "Fecha Registro", "Documento", "Impuesto", "Total"});
+        return dtm;
     }
 
 }
