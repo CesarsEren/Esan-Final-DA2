@@ -122,7 +122,7 @@ public class UtilVentasDAOImpl extends Conexion implements UtilVentasDAO {
 
     @Override
     public Object[][] buscarSerieAndNumeroReply(String serie, String correlativo) {
-        return select("CabVenta", "idVenta", "serie=" + comillas(serie) + "&correlativo=" + comillas(correlativo));
+        return select("CabVenta", "count(idVenta)", "serie=" + comillas(serie) + "and correlativo=" + comillas(correlativo));
     }
 
 }
