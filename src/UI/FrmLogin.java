@@ -4,9 +4,18 @@
  */
 package UI;
 
+import DAO.ClienteDAO;
+import DAO.Impl.ClienteDAOImpl;
+import DAO.Impl.UsuarioDAOImpl;
+import DAO.UsuarioDAO;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.StringJoiner;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -17,6 +26,8 @@ public class FrmLogin extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    UsuarioDAO aO = new UsuarioDAOImpl();
+
     public FrmLogin() {
         initComponents();
         centerFrameOnScreen(this);
@@ -41,9 +52,9 @@ public class FrmLogin extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtUser = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        txtpass = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -56,9 +67,8 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Usuario :");
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtUser.setName("Usuario"); // NOI18N
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton1.setText("Ingresar");
@@ -67,6 +77,8 @@ public class FrmLogin extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        txtpass.setName("Contraseña"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -78,11 +90,10 @@ public class FrmLogin extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                    .addComponent(txtpass))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -90,15 +101,17 @@ public class FrmLogin extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(31, 31, 31)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(34, 34, 34)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(txtpass, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addGap(27, 27, 27))
         );
 
         jLabel4.setFont(new java.awt.Font("Segoe UI Black", 1, 15)); // NOI18N
@@ -124,20 +137,67 @@ public class FrmLogin extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addGap(3, 3, 3)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 10, Short.MAX_VALUE))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-
-        this.dispose();
-        new FrmPrincipal().setVisible(true);
-
+        // TODO add your handling code here: 
+        String usuario = txtUser.getText(), contrasenia = txtpass.getText();
+        llenarError(txtUser, txtpass);
+        Object[][] dt = aO.select(usuario, contrasenia);
+        if (dt.length > 0) {
+            FrmPrincipal.ID_USUARIO_SESION = Integer.parseInt(dt[0][0] + "");
+            FrmPrincipal.DATA_USUARIO_SESION = dt[0][3] + "/" + dt[0][2] + "/" + dt[0][1];
+            FrmPrincipal.DATA_ROL = dt[0][3] + "";
+            this.dispose();
+            new FrmPrincipal().setVisible(true);
+        } else {
+            JPanel panel = new JPanel();
+            StringJoiner joiner = new StringJoiner("<br>");
+            joiner.add("USUARIO NO ENCONTRADO");
+            if (!joiner.toString().isEmpty()) {
+                panel.add(new JLabel("<html><font color='red'>" + joiner.toString() + "</font></html>"));
+                JOptionPane.showOptionDialog(
+                        null,
+                        panel,
+                        "Alerta",
+                        JOptionPane.WARNING_MESSAGE,
+                        JOptionPane.WARNING_MESSAGE,
+                        null,
+                        new Object[]{},
+                        null
+                );
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    public boolean llenarError(JTextField... jTxtFields) {
+        JPanel panel = new JPanel();
+        StringJoiner joiner = new StringJoiner("<br>");
+        for (JTextField jtxtfield : jTxtFields) {
+            System.out.println("fild" + jtxtfield.getName());
+            if (jtxtfield.getText().isEmpty()) {
+                joiner.add(jtxtfield.getName().concat(" no puede estar vacío"));
+            }
+        }
+        if (!joiner.toString().isEmpty()) {
+            panel.add(new JLabel("<html><font color='red'>" + joiner.toString() + "</font></html>"));
+            JOptionPane.showOptionDialog(
+                    null,
+                    panel,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    new Object[]{},
+                    null
+            );
+        }
+        return !joiner.toString().isEmpty();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -145,7 +205,7 @@ public class FrmLogin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField txtUser;
+    private javax.swing.JPasswordField txtpass;
     // End of variables declaration//GEN-END:variables
 }

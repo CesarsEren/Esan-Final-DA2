@@ -6,6 +6,7 @@ package UI.internal;
 
 import BEAN.ComboData;
 import BEAN.Trabajador;
+import DAO.Conexion;
 import DAO.Impl.TrabajadorDAOImpl;
 import DAO.Impl.UbigeoUtilDAOImpl;
 import DAO.TrabajadorDAO;
@@ -26,6 +27,20 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DateFormatter;
 import DAO.UbigeoUtilDAO;
+import UTIL.EmailOnlyDocument;
+import UTIL.NumberOnlyDocument;
+import UTIL.TextOnlyDocument;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  *
@@ -38,29 +53,46 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
      */
     TrabajadorDAO trabajadorDAO = new TrabajadorDAOImpl();
     UbigeoUtilDAO ubigeoDAO = new UbigeoUtilDAOImpl();
-
+    
     DefaultTableModel defaultTableModel = new DefaultTableModel();
     Object[][] select, selectaux;
     DefaultComboBoxModel<ComboData> boxModel = null;
-    DefaultComboBoxModel<ComboData> boxDep, boxProv, boxDisc = null;
-
+    DefaultComboBoxModel<String> boxDep, boxProv, boxDisc = null;
+    
     public InFrmTrabajador() {
         initComponents();
+        default_config();
+        jtblTrabajador.setModel(trabajadorDAO.llenartabla());
+        boxModel = trabajadorDAO.llenarcombo();
+        config_ubigeo();
+        default_validaciones();
+    }
+    
+    public void default_config() {
         this.setTitle("Trabajador");
         this.setClosable(true);
         this.setResizable(true);
         this.txtBuscador.setEnabled(false);
-        ///defaultTableModel = trabajadorDAO.llenartabla();
-        //select = trabajadorDAO.select();
-        //selectaux = select;
-        //defaultTableModel.setDataVector(select, new Object[]{"idTrabajador", "Puesto", "Nro Documento", "Nombre", "Apellido Paterno", "Apellido Materno", "Ubigeo", "Direccion", "Genero", "Fecha Nacimiento", "Celular", "Telefono", "Correo", "Estado"});
-        jtblTrabajador.setModel(trabajadorDAO.llenartabla());
-        boxModel = trabajadorDAO.llenarcombo();
-
+    }
+    
+    public void config_ubigeo() {
         boxDep = ubigeoDAO.llenarcomboDep();
         cboPuesto.setModel(boxModel);
         cboDepa.setModel(boxDep);
-
+        cboDepa.setSelectedIndex(2);
+        txtUbigeo.setText(ubigeoDAO.getUbigeoByDeptProvDist(cboDepa.getSelectedItem().toString(), cboProv.getSelectedItem().toString(), cboDistrito.getSelectedItem().toString()));
+    }
+    
+    public void default_validaciones() {
+        txtCelular.setDocument(new NumberOnlyDocument(9));
+        txtTelefono.setDocument(new NumberOnlyDocument(6));
+        txtnroDocumento.setDocument(new NumberOnlyDocument(15));
+        txtnombre.setDocument(new TextOnlyDocument(30));
+        txtApePaterno.setDocument(new TextOnlyDocument(30));
+        txtApeMaterno.setDocument(new TextOnlyDocument(30));
+        txtdireccion.setDocument(new EmailOnlyDocument(60));
+        txtCorreo.setDocument(new EmailOnlyDocument(60));
+        rbActivo.setSelected(true);
     }
 
     /**
@@ -111,6 +143,8 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         jLabel16 = new javax.swing.JLabel();
         cboDistrito = new javax.swing.JComboBox<>();
         jLabel17 = new javax.swing.JLabel();
+        btnEliminar = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtblTrabajador = new javax.swing.JTable();
@@ -123,7 +157,20 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Trabajador"));
 
+        txtnroDocumento.setName("Nro Documento"); // NOI18N
+
         txtid.setEnabled(false);
+
+        txtnombre.setName("Nombre"); // NOI18N
+
+        txtApeMaterno.setName("Apellido Materno"); // NOI18N
+
+        txtApePaterno.setName("Apellido Paterno"); // NOI18N
+
+        txtUbigeo.setEnabled(false);
+        txtUbigeo.setName("Ubigeo"); // NOI18N
+
+        txtdireccion.setName("Dirección"); // NOI18N
 
         btnGrpEstado.add(rbActivo);
         rbActivo.setText("Activo");
@@ -161,6 +208,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
 
         jLabel9.setText("Dirección");
 
+        txtFechaNacimiento.setName("Fecha Nacimiento"); // NOI18N
         txtFechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtFechaNacimientoActionPerformed(evt);
@@ -169,9 +217,15 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
 
         jLabel10.setText("Fecha Nacimiento");
 
+        txtCelular.setName("Celular"); // NOI18N
+
         jLabel11.setText("Celular");
 
+        txtTelefono.setName("Teléfono"); // NOI18N
+
         jLabel12.setText("Teléfono");
+
+        txtCorreo.setName("Correo"); // NOI18N
 
         jLabel13.setText("Correo");
 
@@ -194,6 +248,11 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
                 cboDepaItemStateChanged(evt);
             }
         });
+        cboDepa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboDepaActionPerformed(evt);
+            }
+        });
 
         jLabel14.setText("Departamento");
 
@@ -207,7 +266,27 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
 
         jLabel16.setText("Distrito");
 
+        cboDistrito.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboDistritoItemStateChanged(evt);
+            }
+        });
+
         jLabel17.setText("Estado");
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Ver Reporte");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -216,18 +295,11 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel7)
-                        .addComponent(txtUbigeo, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel1)
                                 .addComponent(txtnroDocumento, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(btnNuevo)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(btnregistro))
                                 .addComponent(jLabel6)
                                 .addComponent(txtApeMaterno, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                                 .addComponent(jLabel5)
@@ -243,34 +315,45 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel8)
                                 .addComponent(cboGenero, 0, 194, Short.MAX_VALUE)))
-                        .addGap(112, 112, 112)
+                        .addGap(100, 100, 100)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel14)
+                                .addComponent(jLabel16)
+                                .addComponent(jLabel15)
+                                .addComponent(cboDistrito, 0, 194, Short.MAX_VALUE)
+                                .addComponent(cboProv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cboDepa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(rbActivo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(rbInactivo))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel14)
                                 .addComponent(jLabel13)
                                 .addComponent(txtCorreo)
                                 .addComponent(jLabel11)
                                 .addComponent(jLabel12)
-                                .addComponent(jLabel16)
-                                .addComponent(jLabel15)
-                                .addComponent(cboDistrito, 0, 194, Short.MAX_VALUE)
-                                .addComponent(cboProv, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cboDepa, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtCelular)
                                 .addComponent(txtTelefono)
                                 .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel10))
-                            .addComponent(jLabel17))))
-                .addContainerGap(34, Short.MAX_VALUE))
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel7)
+                            .addComponent(txtUbigeo, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnNuevo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnregistro)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnEliminar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
                     .addComponent(jLabel1))
@@ -296,57 +379,66 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
                             .addComponent(txtnroDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cboDistrito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel11))
-                .addGap(1, 1, 1)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtnombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel12))
-                .addGap(2, 2, 2)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtApePaterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtApeMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel17))
-                .addGap(3, 3, 3)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbActivo)
-                    .addComponent(rbInactivo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnNuevo)
-                        .addComponent(btnregistro))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(1, 1, 1)
+                        .addComponent(txtnombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(5, 5, 5)
                         .addComponent(txtUbigeo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(2, 2, 2)
+                        .addComponent(txtApePaterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtApeMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(txtdireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addGap(3, 3, 3)
+                        .addComponent(cboGenero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addGap(1, 1, 1)
+                        .addComponent(txtCelular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel12)
+                        .addGap(2, 2, 2)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel17)
+                        .addGap(3, 3, 3)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rbActivo)
+                            .addComponent(rbInactivo))))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNuevo)
+                    .addComponent(btnregistro)
+                    .addComponent(btnEliminar)
+                    .addComponent(jButton2))
+                .addContainerGap())
         );
 
         getContentPane().add(jPanel1);
@@ -433,7 +525,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         limpiar();
     }//GEN-LAST:event_btnNuevoActionPerformed
-
+    
     void limpiar() {
         txtApeMaterno.setText("");
         txtApePaterno.setText("");
@@ -449,7 +541,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         txtnroDocumento.setText("");
         btnregistro.setText("Registrar");
     }
-
+    
     void setDataTrabajador(Trabajador t, ComboData p) {
         txtApeMaterno.setText(t.getApeMat());
         txtApePaterno.setText(t.getApePat());
@@ -465,16 +557,13 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         txtnombre.setText(t.getNombre());
         txtnroDocumento.setText(t.getDocIdent());
         cboGenero.setSelectedIndex(t.getGenero());
-
-        //String selectedValue = getSelectedButtonValue(btnGrpEstado);
-        //System.out.println(selectedValue);
         if (t.getEstado() == 1) {
             rbActivo.setSelected(true);
         } else {
             rbInactivo.setSelected(true);
         }
     }
-
+    
     private static String getSelectedButtonValue(ButtonGroup buttonGroup) {
         for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
             AbstractButton button = buttons.nextElement();
@@ -482,12 +571,37 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
                 return button.getText();
             }
         }
-
         return null;
+    }
+    
+    public boolean llenarError(JTextField... jTxtFields) {
+        JPanel panel = new JPanel();
+        StringJoiner joiner = new StringJoiner("<br>");
+        for (JTextField jtxtfield : jTxtFields) {
+            System.out.println("field" + jtxtfield.getName());
+            if (jtxtfield.getText().isEmpty()) {
+                joiner.add(jtxtfield.getName().concat(" no puede estar vacío"));
+            }
+        }
+        if (!joiner.toString().isEmpty()) {
+            panel.add(new JLabel("<html><font color='red'>" + joiner.toString() + "</font></html>"));
+            JOptionPane.showOptionDialog(
+                    null,
+                    panel,
+                    "Alerta",
+                    JOptionPane.WARNING_MESSAGE,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    new Object[]{},
+                    null
+            );
+        }
+        return !joiner.toString().isEmpty();
     }
 
     private void btnregistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnregistroActionPerformed
         // TODO add your handling code here:
+
         Trabajador t = new Trabajador();
         t.setDireccion(txtdireccion.getText());
         t.setNombre(txtnombre.getText());
@@ -500,35 +614,53 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
         t.setDocIdent(txtnroDocumento.getText());
         t.setTelefono(txtTelefono.getText());
         t.setEstado((short) (rbActivo.isSelected() ? 1 : 0));
-        LocalDate localDate = LocalDate.parse(txtFechaNacimiento.getText());
-        t.setFecha_nacimiento(localDate);
+        boolean condicionerror
+                = llenarError(
+                        txtdireccion,
+                        txtnombre,
+                        txtApePaterno,
+                        txtApeMaterno,
+                        txtCelular,
+                        txtCorreo,
+                        txtUbigeo,
+                        txtnroDocumento,
+                        txtTelefono,
+                        txtFechaNacimiento);
+        
+        if (!txtFechaNacimiento.getText().isEmpty()) {
+            LocalDate localDate = LocalDate.parse(txtFechaNacimiento.getText());
+            t.setFecha_nacimiento(localDate);
+        }
         t.setIdPuesto(((ComboData) cboPuesto.getSelectedItem()).getId());
         System.out.println(this.btnregistro.getText());
-        switch (this.btnregistro.getText()) {
-            case "Registrar":
-                t.setIdTrabajador(0);
-                if (trabajadorDAO.save(t)) {
-                    JOptionPane.showMessageDialog(this, "Trabajador Guardado Correctamete", "Mensaje de confirmación", JOptionPane.INFORMATION_MESSAGE);
-                    jtblTrabajador.setModel(trabajadorDAO.llenartabla());
-                }
-                break;
-            case "Actualizar":
-                t.setIdTrabajador(Integer.parseInt(txtid.getText()));
-                if (trabajadorDAO.save(t)) {
-                    JOptionPane.showMessageDialog(this, "Trabajador Actualizado Correctamete", "Mensaje de confirmación", JOptionPane.INFORMATION_MESSAGE);
-                    jtblTrabajador.setModel(trabajadorDAO.llenartabla());
-                }
-                break;
+        if (!condicionerror) {
+            switch (this.btnregistro.getText()) {
+                case "Registrar":
+                    t.setIdTrabajador(0);
+                    if (trabajadorDAO.save(t)) {
+                        JOptionPane.showMessageDialog(this, "Trabajador Guardado Correctamente", "Mensaje de confirmación", JOptionPane.INFORMATION_MESSAGE);
+                        jtblTrabajador.setModel(trabajadorDAO.llenartabla());
+                    }
+                    break;
+                case "Actualizar":
+                    t.setIdTrabajador(Integer.parseInt(txtid.getText()));
+                    if (trabajadorDAO.save(t)) {
+                        JOptionPane.showMessageDialog(this, "Trabajador Actualizado Correctamete", "Mensaje de confirmación", JOptionPane.INFORMATION_MESSAGE);
+                        jtblTrabajador.setModel(trabajadorDAO.llenartabla());
+                    }
+                    break;
+            }
         }
 
     }//GEN-LAST:event_btnregistroActionPerformed
+    
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here: 
         String buscar = cboBuscar.getSelectedItem().toString();
         switch (buscar) {
             case "TODOS":
-
+                
                 defaultTableModel = trabajadorDAO.llenartabla();
                 break;
             case "DNI":
@@ -564,7 +696,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
             txtBuscador.setEnabled(true);
         }
     }//GEN-LAST:event_cboBuscarItemStateChanged
-
+    
     private static int findIndex(DefaultComboBoxModel<ComboData> model, ComboData value) {
         for (int i = 0; i < model.getSize(); i++) {
             if (model.getElementAt(i).getId() == (value.getId())) {
@@ -575,7 +707,7 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
     }
 
     private void jtblTrabajadorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtblTrabajadorMouseClicked
-
+        
         int selectedRow = jtblTrabajador.getSelectedRow();
         if (selectedRow != -1) {
             // Obtener datos de la fila seleccionada
@@ -587,17 +719,23 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
             String apePat = (String) jtblTrabajador.getValueAt(selectedRow, 4);
             String apeMat = (String) jtblTrabajador.getValueAt(selectedRow, 5);
             String ubigeo = (String) jtblTrabajador.getValueAt(selectedRow, 6);
+            
+            Object[][] ubigeos = ubigeoDAO.getRowByIdUbigeo(ubigeo);
+            cboDepa.setSelectedItem(ubigeos[0][1].toString());
+            cboProv.setSelectedItem(ubigeos[0][2].toString());
+            cboDistrito.setSelectedItem(ubigeos[0][3].toString());
+            
             String direccion = (String) jtblTrabajador.getValueAt(selectedRow, 7);
             int genero = (int) (("Masculino".equals(jtblTrabajador.getValueAt(selectedRow, 8).toString())) ? 1 : 0);//Integer.parseInt((String) jtblTrabajador.getValueAt(selectedRow, 8));
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate fechaNacimiento = LocalDate.parse(jtblTrabajador.getValueAt(selectedRow, 9).toString(), formatter);
-
+            
             String celular = (String) jtblTrabajador.getValueAt(selectedRow, 10);
             String telefono = (String) jtblTrabajador.getValueAt(selectedRow, 11);
             String correo = (String) jtblTrabajador.getValueAt(selectedRow, 12);
             short estado = (short) (("Activo".equals(jtblTrabajador.getValueAt(selectedRow, 13).toString())) ? 1 : 0);
-
+            
             Trabajador trabajador = new Trabajador(idTrabajador, puesto.getId(), docIdent, nombre, apePat, apeMat,
                     ubigeo, direccion, genero, fechaNacimiento, celular, telefono, correo, estado);
             setDataTrabajador(trabajador, puesto);
@@ -621,32 +759,62 @@ public class InFrmTrabajador extends javax.swing.JInternalFrame {
     private void cboDepaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboDepaItemStateChanged
         // TODO add your handling code here:
 
-        boxProv = ubigeoDAO.llenarcomboProv(((ComboData) boxDep.getSelectedItem()).getText());
+        boxProv = ubigeoDAO.llenarcomboProv((String) boxDep.getSelectedItem());
         cboProv.setModel(boxProv);
-        boxDisc = ubigeoDAO.llenarcomboDist(((ComboData) boxProv.getSelectedItem()).getText());
+        boxDisc = ubigeoDAO.llenarcomboDist((String) boxProv.getSelectedItem());
         cboDistrito.setModel(boxDisc);
-        // boxProv = ubigeoDAO.llenarcomboProv(((ComboData) boxDep.getSelectedItem()).getText());
+        txtUbigeo.setText(ubigeoDAO.getUbigeoByDeptProvDist(cboDepa.getSelectedItem().toString(), cboProv.getSelectedItem().toString(), cboDistrito.getSelectedItem().toString()));
+// boxProv = ubigeoDAO.llenarcomboProv(((ComboData) boxDep.getSelectedItem()).getText());
     }//GEN-LAST:event_cboDepaItemStateChanged
 
     private void cboProvItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboProvItemStateChanged
         // TODO add your handling code here:
-        boxDisc = ubigeoDAO.llenarcomboDist(((ComboData) boxProv.getSelectedItem()).getText());
+        boxDisc = ubigeoDAO.llenarcomboDist(((String) boxProv.getSelectedItem()));
         cboDistrito.setModel(boxDisc);
-        //   boxDisc = ubigeoDAO.llenarcomboDist(((ComboData) boxProv.getSelectedItem()).getText());
+        txtUbigeo.setText(ubigeoDAO.getUbigeoByDeptProvDist(cboDepa.getSelectedItem().toString(), cboProv.getSelectedItem().toString(), cboDistrito.getSelectedItem().toString()));
+//   boxDisc = ubigeoDAO.llenarcomboDist(((ComboData) boxProv.getSelectedItem()).getText());
     }//GEN-LAST:event_cboProvItemStateChanged
+
+    private void cboDepaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDepaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboDepaActionPerformed
+
+    private void cboDistritoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboDistritoItemStateChanged
+        // TODO add your handling code here:
+        txtUbigeo.setText(ubigeoDAO.getUbigeoByDeptProvDist(cboDepa.getSelectedItem().toString(), cboProv.getSelectedItem().toString(), cboDistrito.getSelectedItem().toString()));
+    }//GEN-LAST:event_cboDistritoItemStateChanged
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here: 
+        this.trabajadorDAO.ImprimirReporte();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+
+        if (this.trabajadorDAO.eliminar(Integer.parseInt(txtid.getText()))) {
+            JOptionPane.showMessageDialog(this, "Trabajador Eliminar con éxito");
+            jtblTrabajador.setModel(trabajadorDAO.llenartabla());
+            limpiar();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se puede Eliminar Trabajador");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.ButtonGroup btnGrpEstado;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnregistro;
     private javax.swing.JComboBox<String> cboBuscar;
-    private javax.swing.JComboBox<ComboData> cboDepa;
-    private javax.swing.JComboBox<ComboData> cboDistrito;
+    private javax.swing.JComboBox<String> cboDepa;
+    private javax.swing.JComboBox<String> cboDistrito;
     private javax.swing.JComboBox<String> cboGenero;
-    private javax.swing.JComboBox<ComboData> cboProv;
+    private javax.swing.JComboBox<String> cboProv;
     private javax.swing.JComboBox<ComboData> cboPuesto;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

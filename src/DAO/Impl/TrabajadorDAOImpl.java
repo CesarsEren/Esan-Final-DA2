@@ -8,9 +8,33 @@ import BEAN.Trabajador;
 import DAO.Conexion;
 import DAO.TrabajadorDAO;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.StringJoiner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.view.JasperViewer;
+
+import java.util.HashMap;
+import java.util.Map;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 
 /**
  *
@@ -18,16 +42,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
-    public TrabajadorDAOImpl() {
-    }
-
     @Override
     public DefaultTableModel llenartabla() {
-       /*  Object[][] select2 = select("Area","idArea,descr",null);
+        /*  Object[][] select2 = select("Area","idArea,descr",null);
         DefaultTableModel defaultTableModel = new DefaultTableModel(); 
         defaultTableModel.setDataVector(select2, new Object[]{"ID","DESCRIPCIÓN"});*/
-        
-       Object[][] select = select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,CAST(p.idPuesto AS VARCHAR(10))+'|'+Puesto as Puesto ,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
+
+        Object[][] select = select("Trabajador tr inner join Puesto p on tr.idPuesto = p.idPuesto", "idTrabajador,CAST(p.idPuesto AS VARCHAR(10))+'|'+Puesto as Puesto ,docIdent,nombre,apePat,apeMat,ubigeo,direccion, CASE WHEN genero=1 THEN 'Masculino' ELSE 'Femenino' END as genero ,fecha_nacimiento,celular,telefono,correo, CASE WHEN estado=1 THEN 'Activo' ELSE 'Inactivo' END as estado ", null);
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setDataVector(select, new Object[]{"idTrabajador", "Puesto", "Nro Documento", "Nombre", "Apellido Paterno", "Apellido Materno", "Ubigeo", "Direccion", "Genero", "Fecha Nacimiento", "Celular", "Telefono", "Correo", "Estado"});
 
@@ -52,15 +73,12 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
         return dtm;
     }
- 
+
     @Override
     public boolean save(Trabajador t) {
-
         StringJoiner registros = new StringJoiner(",");
-
         if (t.getIdTrabajador() == 0) {
-            Object[][] objs = select("Trabajador", "max(idTrabajador) as idTrabajador", null);
-            int lastID = Integer.parseInt(objs[0][0] + "");
+            int lastID = selectSQLMaxId("Trabajador", "idTrabajador", null);
             registros.add((++lastID) + "");
         }
         registros
@@ -92,6 +110,40 @@ public class TrabajadorDAOImpl extends Conexion implements TrabajadorDAO {
 
     public String comillas(String str) {
         return "'" + str + "'";
+    }
+
+    @Override
+    public void ImprimirReporte() {
+        try {
+            Map<String, Object> map = new HashMap<>();
+            JasperReport jasperReport = JasperCompileManager.compileReport("config/reports/trabajador_report.jrxml");
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, this.conectardb());
+            JasperViewer.viewReport(jasperPrint, false);
+            /*
+            String pdfFile = "config/temporal-reports/informe.pdf";
+            JasperExportManager.exportReportToPdfFile(jasperPrint, pdfFile);*/
+        } catch (JRException ex) {
+            Logger.getLogger(TrabajadorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public boolean eliminar(int id_trabajador) {
+        boolean res = false;
+        try {
+            ResultSet rs = EjecutarSQL("select count(idUsuario) as cantidad from Usuario where idTrabajador = " + id_trabajador);
+            int size = 0;
+            if (rs.next()) {
+                size = rs.getInt(1);
+            }
+            // rs = Integer.parseInt(slc[0][0] + "") > 0;
+            if (size == 0) {
+                res = delete("Trabajador", "idTrabajador=" + id_trabajador);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TrabajadorDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
     }
 
 }

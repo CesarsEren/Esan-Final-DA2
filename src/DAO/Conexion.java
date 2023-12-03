@@ -132,6 +132,22 @@ public class Conexion {
 
     }
 
+    public int selectSQLMaxId(String tabla, String colID, String where) {
+        String SQL_CONSULTA = "SELECT isnull(max(" + colID + "),0) as id FROM " + tabla;
+        String q = where == null ? SQL_CONSULTA : SQL_CONSULTA + " WHERE " + where;
+        int maxId = 0;
+        try {
+            PreparedStatement pstm = conectardb().prepareStatement(q);
+            ResultSet res = pstm.executeQuery();
+            if (res.next()) {
+                maxId = res.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return maxId;
+    }
+
     /**
      *
      * funcion para consultar a la DB
@@ -412,6 +428,26 @@ public class Conexion {
             dbCon.close();
         } catch (SQLException ex) {
             System.out.println(ex);
+        }
+    }
+
+    public ResultSet resultadoSQL(String sql) throws SQLException {
+        Statement s = Conexion.dbCon.createStatement();
+        ResultSet r = s.executeQuery(sql);
+        if (r == null) {
+            return null;
+        } else {
+            return r;
+        }
+    }
+
+    public int ejecutaSQL(String sql) throws SQLException {
+        Statement s = Conexion.dbCon.createStatement();
+        int r = s.executeUpdate(sql);
+        if (r == 0) {
+            return 0;
+        } else {
+            return r;
         }
     }
 }

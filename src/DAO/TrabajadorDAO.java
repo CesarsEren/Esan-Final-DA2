@@ -18,12 +18,16 @@ public interface TrabajadorDAO {
 //    Conexion c = new Conexion("");
     public boolean save(Trabajador t);
 
-    public Object[][] select();
+        public Object[][] select();
 
     public DefaultTableModel llenartabla();
 
     public DefaultTableModel buscarEnTabla(String colm, String data);
 
     public DefaultComboBoxModel llenarcombo();
+    
+    public void ImprimirReporte();
+     
+    public boolean eliminar(int id_trabajador) ;
 
 }
