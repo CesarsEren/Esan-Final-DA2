@@ -9,6 +9,7 @@ import BEAN.DetVenta;
 import DAO.Conexion;
 import DAO.UtilVentasDAO;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,8 +122,18 @@ public class UtilVentasDAOImpl extends Conexion implements UtilVentasDAO {
     }
 
     @Override
-    public Object[][] buscarSerieAndNumeroReply(String serie, String correlativo) {
-        return select("CabVenta", "count(idVenta) as idVenta", "serie=" + comillas(serie) + "and correlativo=" + comillas(correlativo));
+    public boolean buscarSerieAndNumeroReply(String serie, String correlativo) {
+    
+        ResultSet resultSet = EjecutarSQL("select count(idVenta) as idVenta from CabVenta where serie=" + comillas(serie) + " and correlativo=" + comillas(correlativo));
+        int count = 0;
+        try {
+            if (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UtilVentasDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count > 0;
     }
 
 }

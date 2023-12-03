@@ -590,8 +590,7 @@ public class InFrmVenta extends javax.swing.JInternalFrame {
                         null
                 );
             } else {
-                Object[][] objs = utilVentasDAO.buscarSerieAndNumeroReply(txtSerie.getText().trim(), txtNro.getText().trim());
-                if (objs.length > 0 || Integer.parseInt(objs[0][0] + "") > 0) {
+                if (utilVentasDAO.buscarSerieAndNumeroReply(txtSerie.getText().trim(), txtNro.getText().trim())) {
                     JOptionPane.showMessageDialog(this, "EL NRO DE SERIE Y CORRELATIVO YA EXISTEN , VUELVA A INTENTARLO CON OTROS");
                 } else {
                     CabVenta cabVenta = new CabVenta();

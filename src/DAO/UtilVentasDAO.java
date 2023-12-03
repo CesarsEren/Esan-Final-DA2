@@ -26,5 +26,5 @@ public interface UtilVentasDAO {
 
     public boolean guardarVenta(CabVenta cabVenta, List<DetVenta> lsDetVenta);
 
-    public Object[][] buscarSerieAndNumeroReply(String serie, String correlativo);
+    public boolean buscarSerieAndNumeroReply(String serie, String correlativo);
 }
